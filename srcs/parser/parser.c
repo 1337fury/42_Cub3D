@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 15:40:05 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/16 00:26:22 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/16 00:30:06 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,7 @@ int _parser(char *file_path, t_config *config, t_gc *gc)
     if (read_file(fd, &f_content, gc))
         return (_perror("read", F_READ), 1);
     if (_start_parsing(f_content, config, gc))
-        return (1);
-    for (int i = 0; config->map.grid[i]; i++)
-        printf("%s\n", config->map.grid[i]);
+        return (EXIT_FAILURE);
     close(fd);
     return (EXIT_SUCCESS);
 }
