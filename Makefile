@@ -14,7 +14,7 @@ HSL			= main.c
 #PARSER SRCS LIST
 PSL			= parser.c
 #UTILS SRCS LIST
-USL			= checker.c
+USL			= checker.c errors.c
 
 
 #PARSER SRCS PATH
