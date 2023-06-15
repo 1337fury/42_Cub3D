@@ -13,18 +13,22 @@ LIB_A       = library/libftprintf.a
 HSL			= main.c
 #PARSER SRCS LIST
 PSL			= parser.c
+#UTILS SRCS LIST
+USL			= checker.c
 
 
 #PARSER SRCS PATH
 PSP			= $(addprefix srcs/parser/,$(PSL))
 #HOME SRCS PATH
 HSP			= $(addprefix srcs/home/,$(HSL))
+#UTILS SRCS PATH
+USP			= $(addprefix srcs/utils/,$(USL))
 
 #SOURCES LIST WITHOUT PATH
-SL			= $(PSL) $(HSL)
+SL			= $(PSL) $(HSL) $(USL)
 
 #SOURCES WITH PATH
-SRCS		= $(PSP) $(HSP)
+SRCS		= $(PSP) $(HSP) $(USP)
 
 
 #Object
@@ -59,6 +63,11 @@ $(O_DIR)%.o : srcs/parser/%.c
 	@echo "Compiling $(GREEN)$@"
 
 $(O_DIR)%.o : srcs/home/%.c
+	@tput cuu1
+	@$(CC) $(FLAGS) $(INC)  -c $< -o $@
+	@echo "Compiling $(GREEN)$@"
+
+$(O_DIR)%.o : srcs/utils/%.c
 	@tput cuu1
 	@$(CC) $(FLAGS) $(INC)  -c $< -o $@
 	@echo "Compiling $(GREEN)$@"
