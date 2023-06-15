@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/15 23:29:32 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/16 00:24:27 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ void    _perror(char *type, char *msg);
 int     check_extension(char *ext);
 
 char    *to_str(char c, t_gc *gc);
+
+char    *_process_line(char *content, t_config *config, t_gc *gc);
 
 
 #endif
