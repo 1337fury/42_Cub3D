@@ -13,7 +13,7 @@ GC_LIB		= library/gc_memory.a
 #HOME SRCS LIST
 HSL			= main.c
 #PARSER SRCS LIST
-PSL			= parser.c
+PSL			= parser.c process_line.c
 #UTILS SRCS LIST
 USL			= checker.c errors.c helpers.c
 
