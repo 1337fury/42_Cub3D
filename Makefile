@@ -11,7 +11,7 @@ LIB_A       = library/libftprintf.a
 GC_LIB		= library/gc_memory.a
 
 #HOME SRCS LIST
-HSL			= main.c init.c
+HSL			= main.c init_check.c
 #PARSER SRCS LIST
 PSL			= parser.c process_line.c
 #UTILS SRCS LIST
