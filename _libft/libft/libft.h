@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 19:26:33 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/15 20:07:14 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/16 18:20:56 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 int		_strlen(char *s, char c);
 bool	is_empty(char *s);
 bool	is_space(char c);
+int		get_max(int *order);
 
 #endif
