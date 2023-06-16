@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/16 00:32:10 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/16 18:32:57 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,16 @@ void    _perror(char *type, char *msg);
 int     check_extension(char *ext);
 
 char    *to_str(char c, t_gc *gc);
+void    fill(int **order, t_config *conf);
+char    _next(char *map, int i);
 
 void    _init_all(t_gc **gc, t_config *config);
+int		start_check(t_config *config, t_gc *gc);
 char    *_process_line(char *content, t_config *config, t_gc *gc);
 
+int 	check_one(t_config *conf, t_gc *gc);
+int 	check_two(t_config *conf, t_gc *gc);
+int		check_three(t_config *conf);
+int		check_four(t_config *conf);
 
 #endif
