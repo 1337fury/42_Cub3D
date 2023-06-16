@@ -44,7 +44,8 @@ SRC =  \
  ./ft_putnbr_fd.c \
  ./_strlen.c \
  ./is_empty.c \
- ./is_space.c
+ ./is_space.c \
+ ./_max.c
 
 OBJECTS = $(SRC:.c=.o)
 
