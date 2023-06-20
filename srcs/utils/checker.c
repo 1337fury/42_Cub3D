@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 16:55:12 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/16 18:26:58 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/20 00:44:58 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int check_one(t_config *conf, t_gc *gc)
     int *order;
     int max;
 
+    if (!conf)
+        return (_perror("check_one", "Data!"), 1);
     order = gc_strainer(gc, malloc(sizeof(int) * 6));
     fill(&order, conf);
     max = get_max(order);
@@ -48,7 +50,11 @@ int check_two(t_config *conf, t_gc *gc)
     int     i;
     int     j;
 
+    if (!conf)
+         return (_perror("check_two", "Data!"), 1);
     map = conf->map.grid;
+    if (!map)
+        return (_perror("check_two", "Map!"), 1);
     i = -1;
     while (map[++i])
     {
@@ -68,7 +74,11 @@ int check_three(t_config *conf)
     int     j;
     int     nbr;
 
+    if (!conf)
+        return (_perror("check_three", "Data!"), 1);
     map = conf->map.grid;
+    if (!map)
+        return (_perror("check_two", "Map!"), 1);
     i = -1;
     nbr = 0;
     while (map[++i])
@@ -88,7 +98,11 @@ int check_four(t_config *conf)
     char    *f_map;
     int     i;
 
+    if (!conf)
+        return (_perror("check_four", "Data!"), 1);
     f_map = conf->map.flat;
+    if (!f_map)
+        return (_perror("check_four", "Map!"), 1);
     i = -1;
     while (f_map[++i] == '\n')
         ;
