@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/16 18:32:57 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/20 19:35:45 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,34 @@
 #include <errno.h>
 #include <string.h>
 
+# define WIDTH 1600
+# define HEIGHT 1000
+# define TILE_SIZE 25
+
 #define USAGE "./cub3D <PATH>/map.cub"
 #define MAP   "Invalid file extension"
 #define F_READ "Error reading or empty file"
 
+typedef int (*_update)(void *);
+
+
+typedef struct	s_player
+{
+	double		x;
+	double		y;
+	int		raduis;
+	int		turn_dir;
+	int		walk_dir;
+	double	rot_angle;
+	double	move_speed;
+	double	rot_speed;
+	_update	update;
+}	t_player;
+
 typedef struct	s_map
 {
-	int		width;
-	int		height;
     char    *flat;
 	char	**grid;
-    bool    is_valid;
     int     order;
 }				t_map;
 
@@ -71,6 +88,15 @@ typedef struct s_data
     int point;
 } t_data;
 
+typedef struct s_game
+{
+	mlx_t		*mlx;
+	mlx_image_t	*image;
+	t_player	player;
+	t_config	g_conf;
+}	t_game;
+
+
 
 int     _parser(char *file_path, t_config *config, t_gc *gc);
 int		parse_file(char *file_path, t_config *config);
@@ -88,7 +114,7 @@ char    *to_str(char c, t_gc *gc);
 void    fill(int **order, t_config *conf);
 char    _next(char *map, int i);
 
-void    _init_all(t_gc **gc, t_config *config);
+int		 _init_all(t_gc **gc, t_config *config, t_game *game);
 int		start_check(t_config *config, t_gc *gc);
 char    *_process_line(char *content, t_config *config, t_gc *gc);
 
@@ -96,5 +122,14 @@ int 	check_one(t_config *conf, t_gc *gc);
 int 	check_two(t_config *conf, t_gc *gc);
 int		check_three(t_config *conf);
 int		check_four(t_config *conf);
+
+int		game_engine();
+int		grid_render(t_game *game);
+int		player_rander(t_game *game);
+void    _fill(t_game *g, int y, int x, unsigned int color);
+void	_circle(t_game *g, int x, int y, int r, int color);
+void	draw_line(t_game *g, int x0, int y0, int x1, int y1);
+
+void    _game_loop(t_game *game);
 
 #endif
