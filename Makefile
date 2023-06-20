@@ -1,7 +1,7 @@
 #[abdeel-o]
 NAME		= cub3d
 CC 			= cc
-FLAGS 		= -Wall -Wextra -Werror -fsanitize=address
+FLAGS 		= -Wall -Wextra -Werror -g -fsanitize=address
 INC 		= -I include/cub3d -I include/MLX42 -I _libft/include -I _libft/libft -I gc_memory/include
 
 GLFW		= -lglfw -L "/Users/abdeel-o/.brew/opt/glfw/lib"
@@ -11,12 +11,13 @@ LIB_A       = library/libftprintf.a
 GC_LIB		= library/gc_memory.a
 
 #HOME SRCS LIST
-HSL			= main.c init_check.c
+HSL			= main.c _init.c
 #PARSER SRCS LIST
 PSL			= parser.c process_line.c
 #UTILS SRCS LIST
 USL			= checker.c errors.c helpers.c
-
+#ENGINE SRCS LIST
+ESL			= engine.c render.c render_utils.c
 
 #PARSER SRCS PATH
 PSP			= $(addprefix srcs/parser/,$(PSL))
@@ -24,12 +25,14 @@ PSP			= $(addprefix srcs/parser/,$(PSL))
 HSP			= $(addprefix srcs/home/,$(HSL))
 #UTILS SRCS PATH
 USP			= $(addprefix srcs/utils/,$(USL))
+#ENGINE SRCS PATH
+ESP			= $(addprefix srcs/engine/,$(ESL))
 
 #SOURCES LIST WITHOUT PATH
-SL			= $(PSL) $(HSL) $(USL)
+SL			= $(PSL) $(HSL) $(USL) $(ESL)
 
 #SOURCES WITH PATH
-SRCS		= $(PSP) $(HSP) $(USP)
+SRCS		= $(PSP) $(HSP) $(USP) $(ESP)
 
 
 #Object
@@ -76,6 +79,11 @@ $(O_DIR)%.o : srcs/utils/%.c
 	@tput cuu1
 	@$(CC) $(FLAGS) $(INC) -c $< -o $@
 	@echo "Compiling $(GREEN)$@"
+
+$(O_DIR)%.o : srcs/engine/%.c
+	@tput cuu1
+	@$(CC) $(FLAGS) $(INC) -c $< -o $@
+	echo "Compiling $(GREEN)$@"
 
 clean:
 	@rm -rf $(O_DIR)
