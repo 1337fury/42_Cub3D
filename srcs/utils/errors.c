@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 17:04:25 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/15 17:04:49 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/19 18:08:27 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ void    _perror(char *type, char *msg)
     if (!type && !msg)
         return ;
     if (type)
+    {
         ft_putstr_fd(type, 2);
-    ft_putstr_fd(": ", 2);
+        ft_putstr_fd(": ", 2);        
+    }
     if (msg)
         ft_putstr_fd(msg, 2);
 }
