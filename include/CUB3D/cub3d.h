@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/20 20:40:33 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/21 17:54:31 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # define WIDTH 1600
 # define HEIGHT 1000
 # define TILE_SIZE 25
+
+# define FOV_ANGLE 60 * (M_PI / 180)
 
 #define USAGE "./cub3D <PATH>/map.cub"
 #define MAP   "Invalid file extension"
