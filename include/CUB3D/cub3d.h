@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/20 19:35:45 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/06/20 20:40:33 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 #define F_READ "Error reading or empty file"
 
 typedef int (*_update)(void *);
-
+typedef bool (*_has_wall)(int, int, char **);
 
 typedef struct	s_player
 {
@@ -53,6 +53,7 @@ typedef struct	s_map
     char    *flat;
 	char	**grid;
     int     order;
+	_has_wall	has_wall;
 }				t_map;
 
 typedef struct   s_info
