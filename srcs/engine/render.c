@@ -6,18 +6,33 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:28:41 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/21 17:35:13 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/23 10:30:48 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+void	cast(int coloumn_id, t_game *g)
+{
+	t_player	*p;
+	t_ray		*rays;
+	float	xintercept;
+	float	yintercept;
+	float	xstep;
+	float	ystep;
+
+	p = g->player;
+	rays = g->rays;
+	yintercept = floor(p->y / TILE_SIZE) * TILE_SIZE; 
+	xintercept = p->x + ((p->y - yintercept) / tan(rays[coloumn_id].ray_angle));
+}
+
 int grid_render(t_game *game)
 {
     static bool i;
-    int     x;
-    int     y;
-    char    **grid;
+    int         x;
+    int         y;
+    char        **grid;
 
     grid = game->g_conf.map.grid;
     y = -1;
@@ -45,29 +60,40 @@ int grid_render(t_game *game)
     return (EXIT_SUCCESS);
 }
 
-bool    is_has_wall(double x, double y, char **grid)
+void	normalize(float *angle)
 {
-    int new_x;
-    int new_y;
+	*angle = *angle % (2 * M_PI);
+	if (*angle < 0)
+		*angle = (2 * M_PI) + *angle;
+}
 
-    new_x = floor(x / TILE_SIZE);
-    new_y = floor(y / TILE_SIZE);
-    printf("\tTHE X IS : %d\n", new_x);
-    printf("\tTHE Y IS : %d\n", new_y);
-    printf("grid[%d][%d] : [%c]\n", new_y, new_x, grid[new_y][new_x]);
-    if (grid[new_y][new_x] == '1')
-        return (true);
-    return (false);
+void    cast_all_rays(t_game *game)
+{
+    int		column_id;
+    float	ray_angle;
+    int		i;
+
+    column_id = 0;
+	ray_angle = game->player.rot_angle - (FOV_ANGLE / 2);
+    i = 0;
+    while (i < NUM_RAYS)
+    {
+    	game->rays[i].ray_angle = normalize(&ray_angle);
+        //game->rays[i].cast(column_id)[...]
+        ray_angle +=  FOV_ANGLE / NUM_RAYS;
+        column_id++;
+		i++;
+    }
 }
 
 int p_update(void *para)
 {
-    t_game      *game;
-    t_player    *p;
-    t_map       *map;
-    double      new_x;
-    double      new_y;
-    double      move_step;
+    t_game		*game;
+    t_player	*p;
+    t_map		*map;
+    double		new_x;
+    double		new_y;
+    double		move_step;
 
     game = (t_game *)para;
     p = &game->player;
@@ -77,9 +103,7 @@ int p_update(void *para)
     move_step = p->walk_dir * p->move_speed;
     new_x = p->x + cos(p->rot_angle) * move_step;
     new_y = p->y + sin(p->rot_angle) * move_step;
-    printf("\tNew x : [%f]\n", new_x);
-    printf("\tNew y : [%f]\n", new_y);
-    if (is_has_wall(new_x, new_y, map->grid) != 1)
+    if (!is_has_wall(new_x, new_y, map->grid))
     {
         p->x = new_x;
         p->y = new_y;
@@ -96,8 +120,9 @@ int player_rander(t_game *game)
     p = &game->player;
     p->update = p_update;
     p->update(game);
-    // _circle(game, cp_x, cp_y, p->raduis,  0xffffffff);
+	cast_all_rays(game);
+	
+    _circle(game, p->x, p->y, p->raduis,  0xffffffff);
     draw_line(game, p->x, p->y, p->x + cos(p->rot_angle) * 30, p->y + sin(p->rot_angle) * 30);
     return (EXIT_SUCCESS);
 }
-
