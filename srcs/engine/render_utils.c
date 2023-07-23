@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:30:24 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/20 19:34:35 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/22 10:53:17 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,20 @@ void	draw_line(t_game *g, int x0, int y0, int x1, int y1)
 
 	for (int i = 0; i <= steps; i++)
 	{
-        mlx_put_pixel(g->image, (int)x, (int)y, 0xff0000ff);
+        mlx_put_pixel(g->image, (float)x, (float)y, 0xff0000ff);
 		x += xIncrement;
 		y += yIncrement;
 	}
+}
+
+bool    is_has_wall(double x, double y, char **grid)
+{
+    int new_x;
+    int new_y;
+
+    new_x = floor(x / TILE_SIZE);
+    new_y = floor(y / TILE_SIZE);
+    if (grid[new_y][new_x] == '1')
+        return (true);
+    return (false);
 }
