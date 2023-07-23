@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/23 10:06:48 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/23 15:05:41 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ struct s_game;
 struct s_player;
 
 typedef int (*_update)(void *);
-// typedef bool (*_has_wall)(int, int, char **);
+typedef bool (*_has_wall)(double, double, char **);
 typedef void (*_cast)(int, struct s_game*);
 typedef void (*_render)(struct s_game*, int);
 
@@ -63,13 +63,13 @@ typedef struct	s_player
 {
 	double		x;
 	double		y;
-	int		raduis;
-	int		turn_dir;
-	int		walk_dir;
-	double	rot_angle;
-	double	move_speed;
-	double	rot_speed;
-	_update	update;
+	int			raduis;
+	int			turn_dir;
+	int			walk_dir;
+	double		rot_angle;
+	double		move_speed;
+	double		rot_speed;
+	_update		update;
 }	t_player;
 
 typedef struct	s_map
@@ -77,7 +77,7 @@ typedef struct	s_map
     char    *flat;
 	char	**grid;
     int     order;
-	// _has_wall	has_wall;
+	_has_wall	has_wall;
 }				t_map;
 
 typedef struct   s_info
@@ -160,7 +160,7 @@ void	draw_line(t_game *g, int x0, int y0, int x1, int y1);
 bool    is_has_wall(double x, double y, char **grid);
 
 //
-void    cast_all_rays(t_game *game);
+int		cast_all_rays(t_game *game);
 
 void    _game_loop(t_game *game);
 
