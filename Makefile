@@ -1,7 +1,7 @@
 #[abdeel-o]
-NAME		= cub3d
+NAME		= cub3D
 CC 			= cc
-FLAGS 		= -Wall -Wextra -Werror -g -fsanitize=address
+FLAGS 		= -Wall -Wextra -Werror #-g -fsanitize=address
 INC 		= -I include/cub3d -I include/MLX42 -I _libft/include -I _libft/libft -I gc_memory/include
 
 GLFW		= -lglfw -L "/Users/abdeel-o/.brew/opt/glfw/lib"
