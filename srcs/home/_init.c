@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 00:31:26 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/20 23:40:23 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/22 12:01:45 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int _init_player(t_player *player)
     player->raduis = 4;
     player->turn_dir = 0;
     player->walk_dir = 0;
-    player->rot_angle = M_PI;
+    player->rot_angle = M_PI / 2;
     player->move_speed = 1.5;
     player->rot_speed = 1.5 * (M_PI / 180);
     return (EXIT_SUCCESS);
@@ -68,6 +68,7 @@ int _init_all(t_gc **gc, t_config *config, t_game *game)
         return (_perror("mlx", (char *)mlx_strerror(mlx_errno)), 1);
     if (image_init(game) || _init_player(&game->player))
         return (EXIT_FAILURE);
+    game->gc = *gc;
     return (0);
 }
 
