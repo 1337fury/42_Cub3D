@@ -6,11 +6,40 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/20 19:35:34 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/23 10:32:25 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	render(t_game *game, int inx)
+{
+	t_player	*p;
+	t_ray		*ray;
+
+	p = &game->player;
+	ray = &game->rays[inx];
+	draw_line(game, p->x, p->y, p->x + cos(ray->ray_angle) * 30, p->y + sin(ray->ray_angle) * 30);
+}
+
+int	rays_render(t_game *game)
+{
+	t_ray	*rays;
+	int		i;
+
+	rays = game->rays;
+	 if (!game || !rays)
+        return (EXIT_FAILURE);
+	i = 0;
+	// while (i < NUM_RAYS)
+	while (i < 1)
+	{
+		rays[i].render = render;
+		rays[i].render(game, i);
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
 
 int key_press(void *param)
 {
@@ -40,11 +69,13 @@ int game_spirit(void *data)
 
     game = (t_game *)data;
     if (grid_render(game))
-        return (_perror("grid_rander", "function failed!"), 1);
+         cleanupAndExit("grid_rander", "function failed!", game);
     if (player_rander(game))
-        return (_perror("player_rander", "function failed!"), 1);
+        cleanupAndExit("player_rander", "function failed!", game);
+	if (rays_render(game))
+		cleanupAndExit("rays_render", "function failed!", game);
     if (key_press(game))
-        return (_perror("key_press", "function failed!"), 1);
+        cleanupAndExit("key_press", "function failed!", game);
     return (EXIT_SUCCESS);
 }
 
