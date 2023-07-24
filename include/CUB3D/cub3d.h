@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/23 15:05:41 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:59:52 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <float.h>
 
-# define WIDTH 1600
-# define HEIGHT 1000
+# define WIDTH 825
+# define HEIGHT 350
 # define TILE_SIZE 25
 
 # define FOV_ANGLE 			60 * (M_PI / 180)
@@ -48,9 +49,10 @@ typedef void (*_render)(struct s_game*, int);
 typedef struct s_ray
 {
 	float	ray_angle;
-	int		wall_hit_x;
-	int		wall_hit_y;
+	float	wall_hit_x;
+	float	wall_hit_y;
 	float	distance;
+	bool	was_hit_vertical;
 	bool	is_ray_facing_down;
 	bool	is_ray_facing_up;
 	bool	is_ray_facing_right;
