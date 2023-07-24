@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 00:31:26 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/22 12:01:45 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:49:55 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int _init_player(t_player *player)
     player->turn_dir = 0;
     player->walk_dir = 0;
     player->rot_angle = M_PI / 2;
-    player->move_speed = 1.5;
+    player->move_speed = 3;
     player->rot_speed = 1.5 * (M_PI / 180);
     return (EXIT_SUCCESS);
 }
