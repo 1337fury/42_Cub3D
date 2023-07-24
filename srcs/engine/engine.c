@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/23 15:50:40 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/24 20:09:52 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,24 @@ void	render(t_game *game, int inx)
 
 	p = &game->player;
 	ray = &game->rays[inx];
-	// draw_line(game, p->x, p->y, p->x + cos(ray->ray_angle) * 30, p->y + sin(ray->ray_angle) * 30);
+	draw_line(game, p->x, p->y, ray->wall_hit_x, ray->wall_hit_y);
 }
 
 int	rays_render(t_game *game)
 {
 	t_ray	*rays;
-	// int		i;
+	int		i;
 
 	rays = game->rays;
 	 if (!game || !rays)
         return (EXIT_FAILURE);
-	// i = 0;
-	// // while (i < NUM_RAYS)
-	// while (i < 1)
-	// {
-	// 	rays[i].render = render;
-	// 	rays[i].render(game, i);
-	// 	i++;
-	// }
+	i = 0;
+	while (i < NUM_RAYS)
+	{
+		rays[i].render = render;
+		rays[i].render(game, i);
+		i++;
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -63,7 +62,7 @@ int key_press(void *param)
     return (EXIT_SUCCESS);
 }
 
-int game_spirit(void *data)
+void	game_spirit(void *data)
 {
     t_game  *game;
 
@@ -72,11 +71,12 @@ int game_spirit(void *data)
          cleanupAndExit("grid_rander", "function failed!", game);
     if (player_rander(game))
         cleanupAndExit("player_rander", "function failed!", game);
-	// if (rays_render(game))
-	// 	cleanupAndExit("rays_render", "function failed!", game);
+	if (cast_all_rays(game))
+		cleanupAndExit("Ray caster", "function failed!", game);
+	if (rays_render(game))
+		cleanupAndExit("rays_render", "function failed!", game);
     if (key_press(game))
         cleanupAndExit("key_press", "function failed!", game);
-    return (EXIT_SUCCESS);
 }
 
 int game_engine(t_game *game, t_config *conf)
