@@ -6,64 +6,125 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:28:41 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/23 15:58:23 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/24 20:17:23 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+float	distance_bet_points(float x1, float y1, float x2, float y2)
+{
+	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+}
+
 void	cast(int coloumn_id, t_game *g)
 {
-	t_player	*p;
-	t_ray		*rays;
-	t_map		*map;
-	float	xintercept;
-	float	yintercept;
-	float	xstep;
-	float	ystep;
-	float	next_horz_touch_x;
-	float	next_horz_touch_y;
-	bool	found_horz_hit;
-	float	wall_hit_x;
-	float	wall_hit_y;
+	t_player	*p = &g->player;
+	t_ray		*rays = g->rays;
+	t_map		*map = &g->g_conf.map;
 
-	p = &g->player;
-	rays = g->rays;
-	map = &g->g_conf.map;
-	found_horz_hit = false;
+	///////////////////////////////////////////
+    // VERTICAL RAY-GRID INTERSECTION CODE
+    ///////////////////////////////////////////
+
+	float		xintercept;
+	float		yintercept;
+	float		xstep;
+	float		ystep;
+
+	bool	found_ver_wall_hit = false;
+	float	ver_wall_hit_x = 0;
+	float	ver_wall_hit_y = 0;
+
+	// Find the x-coordinate of the closest vertical grid intersenction
+	xintercept = floor(p->x / TILE_SIZE) * TILE_SIZE;
+	if (rays[coloumn_id].is_ray_facing_right)
+		xintercept += TILE_SIZE;
+
+	// Find the y-coordinate of the closest vertical grid intersection
+	yintercept = p->y + ((xintercept - p->x) * tan(rays[coloumn_id].ray_angle));
+
+	
+	// Calculate the increment xstep and ystep
+	xstep = TILE_SIZE;
+	if (rays[coloumn_id].is_ray_facing_left)
+		xstep *= -1;
+		
+	ystep = TILE_SIZE * tan(rays[coloumn_id].ray_angle);
+	if (ystep > 0 && rays[coloumn_id].is_ray_facing_up)
+		ystep *= -1;
+	if (ystep < 0 && rays[coloumn_id].is_ray_facing_down)
+		ystep *= -1;
+	
+	float	next_ver_touch_x = xintercept;
+	float	next_ver_touch_y = yintercept;
+
+	if (rays[coloumn_id].is_ray_facing_left)
+		next_ver_touch_x--;
+
+	while (next_ver_touch_x >= 0 && next_ver_touch_x <= WIDTH && next_ver_touch_y >= 0 && next_ver_touch_y <= HEIGHT)
+	{
+		if (map->has_wall(next_ver_touch_x, next_ver_touch_y, map->grid))
+		{
+			found_ver_wall_hit = true;
+			ver_wall_hit_x = next_ver_touch_x;
+			ver_wall_hit_y = next_ver_touch_y;
+
+			// rays[coloumn_id].wall_hit_x = ver_wall_hit_x;
+			// rays[coloumn_id].wall_hit_y = ver_wall_hit_y;
+			// draw_line(g, p->x, p->y, ver_wall_hit_x, ver_wall_hit_y);
+			break ;
+		}
+		else
+		{
+			next_ver_touch_x += xstep;
+			next_ver_touch_y += ystep;
+		}
+	}
+
+
+	///////////////////////////////////////////
+    // HORIZONTAL RAY-GRID INTERSECTION CODE
+    ///////////////////////////////////////////
+
+	bool	found_horz_wall_hit = false;
+	float	horz_wall_hit_x = 0;
+	float	horz_wall_hit_y = 0;
+
+	// Find the y-coordinate of the closest horizontal grid intersenction
 	yintercept = floor(p->y / TILE_SIZE) * TILE_SIZE;
-	if (rays->is_ray_facing_down)
+	if (rays[coloumn_id].is_ray_facing_down)
 		yintercept += TILE_SIZE;
-	xintercept = p->x + ((yintercept - p->y) / tan(rays[coloumn_id].ray_angle));
+	
+	// Find the x-coordinate of the closest horizontal grid intersection
+	xintercept = (p->x + ((yintercept - p->y)) / tan(rays[coloumn_id].ray_angle));
+
+	// Calculate the increment xstep and ystep
 	ystep = TILE_SIZE;
 	if (rays[coloumn_id].is_ray_facing_up)
 		ystep *= -1;
+	
 	xstep = TILE_SIZE / tan(rays[coloumn_id].ray_angle);
 	if (xstep > 0 && rays[coloumn_id].is_ray_facing_left)
 		xstep *= -1;
 	if (xstep < 0 && rays[coloumn_id].is_ray_facing_right)
 		xstep *= -1;
-	// if (rays[coloumn_id].is_ray_facing_right)
-	// 	printf("right\n");
-	// if (rays[coloumn_id].is_ray_facing_left)
-	// 	printf("left\n");
-	// if (rays[coloumn_id].is_ray_facing_up)
-	// 	printf("up\n");
-	// if (rays[coloumn_id].is_ray_facing_down)
-	// 	printf("down\n");
-	next_horz_touch_x = xintercept;
-	next_horz_touch_y = yintercept;
+	
+	float		next_horz_touch_x = xintercept;
+	float		next_horz_touch_y = yintercept;
+	
 
 	if (rays[coloumn_id].is_ray_facing_up)
 		next_horz_touch_y--;
-	while (next_horz_touch_x >= 0 && next_horz_touch_x < WIDTH && next_horz_touch_y >= 0 && next_horz_touch_y < HEIGHT)
+
+	while (next_horz_touch_x >= 0 && next_horz_touch_x <= WIDTH && next_horz_touch_y >= 0 && next_horz_touch_y <= HEIGHT)
 	{
 		if (map->has_wall(next_horz_touch_x, next_horz_touch_y, map->grid))
 		{
-			found_horz_hit = true;
-			wall_hit_x = next_horz_touch_x;
-			wall_hit_y = next_horz_touch_y;
-			// draw_line(g, p->x, p->y, wall_hit_x, wall_hit_y);
+			found_horz_wall_hit = true;
+			horz_wall_hit_x = next_horz_touch_x;
+			horz_wall_hit_y = next_horz_touch_y;
+			// draw_line(g, p->x, p->y, horz_wall_hit_x, horz_wall_hit_y);
 			break ;
 		}
 		else
@@ -72,6 +133,39 @@ void	cast(int coloumn_id, t_game *g)
 			next_horz_touch_y += ystep;
 		}
 	}
+	
+
+	///////////////////////////////////////////////////////////////////////////
+	// // calculate both horz and ver distances and choose the smallest value/
+	/////////////////////////////////////////////////////////////////////////
+
+
+	float	horz_hit_distance;
+	if (found_horz_wall_hit)
+		horz_hit_distance = distance_bet_points(p->x, p->y, horz_wall_hit_x, horz_wall_hit_y);
+	else
+		horz_hit_distance = FLT_MAX;
+
+	float	ver_hit_distance;
+	if (found_ver_wall_hit)
+		ver_hit_distance = distance_bet_points(p->x, p->y, ver_wall_hit_x, ver_wall_hit_y);
+	else
+		ver_hit_distance = FLT_MAX;
+
+	if (horz_hit_distance < ver_hit_distance)
+	{
+		rays[coloumn_id].wall_hit_x = horz_wall_hit_x;
+		rays[coloumn_id].wall_hit_y = horz_wall_hit_y;
+		rays[coloumn_id].distance = horz_hit_distance;
+	}
+	else
+	{
+		rays[coloumn_id].wall_hit_x = ver_wall_hit_x;
+		rays[coloumn_id].wall_hit_y = ver_wall_hit_y;
+		rays[coloumn_id].distance = ver_hit_distance;
+	}
+	rays[coloumn_id].was_hit_vertical = (ver_hit_distance < horz_hit_distance);
+	
 }
 
 int grid_render(t_game *game)
@@ -124,6 +218,7 @@ int	init_ray(t_ray *ray, float angle)
 	ray->wall_hit_x = 0;
 	ray->wall_hit_y = 0;
 	ray->distance = 0;
+	ray->was_hit_vertical = false;
 	ray->is_ray_facing_down = ray->ray_angle > 0 && ray->ray_angle < M_PI;
 	ray->is_ray_facing_up = !ray->is_ray_facing_down;
 	ray->is_ray_facing_right = ray->ray_angle < 0.5 * M_PI || ray->ray_angle > 1.5 * M_PI;
@@ -143,8 +238,7 @@ int	cast_all_rays(t_game *game)
     column_id = 0;
 	ray_angle = game->player.rot_angle - (FOV_ANGLE / 2);
     i = 0;
-    // while (i < NUM_RAYS)
-	while (i < 1)
+    while (i < NUM_RAYS)
     {
 		if (init_ray(&game->rays[i], normalize(&ray_angle)))
 			return (EXIT_FAILURE);
@@ -192,10 +286,7 @@ int player_rander(t_game *game)
     p = &game->player;
     p->update = p_update;
     p->update(game);
-	if (cast_all_rays(game))
-		return (_perror("Ray caster", "fail!"), 1);
 	
     _circle(game, p->x, p->y, p->raduis,  0xffffffff);
-    // draw_line(game, p->x, p->y, p->x + cos(p->rot_angle) * 30, p->y + sin(p->rot_angle) * 30);
     return (EXIT_SUCCESS);
 }
