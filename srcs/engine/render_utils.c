@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:30:24 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/22 10:53:17 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/24 20:18:01 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ bool    is_has_wall(double x, double y, char **grid)
     int new_x;
     int new_y;
 
+
+	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+        return true;
     new_x = floor(x / TILE_SIZE);
     new_y = floor(y / TILE_SIZE);
     if (grid[new_y][new_x] == '1')
