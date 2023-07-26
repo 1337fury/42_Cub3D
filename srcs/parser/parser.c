@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 15:40:05 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/17 13:38:31 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:40:48 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int read_file(int fd, char **content, t_gc *gc)
     *content = "";
     while ((line = get_next_line(fd)))
         *content = gc_strainer(gc, ft_strjoin(*content, line));
-    if (!*content || !**content)
+    if (!**content || !*content)
         return (close(fd), EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }

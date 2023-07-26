@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:30:24 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/24 20:18:01 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/26 21:57:15 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,19 @@ void    _fill(t_game *g, int y, int x, unsigned int color)
 {
     int _x;
     int _y;
+	(void)color;
 
     _y = -1;
+	// mlx_put_pixel(g->image, x, y + _y, 0xfa00a2);
     while (++_y < TILE_SIZE)
     {
         _x = -1;
         while (++_x < TILE_SIZE)
+		{
+			mlx_put_pixel(g->image, x, y + _y, 0xfa00a2);
+			mlx_put_pixel(g->image, x + _x, y, 0xfa00a2);
             mlx_put_pixel(g->image, x + _x, y + _y, color);
+		}
     }
 }
 
@@ -60,13 +66,31 @@ void	draw_line(t_game *g, int x0, int y0, int x1, int y1)
 	}
 }
 
-bool    is_has_wall(double x, double y, char **grid)
+int	get_dimension(int *w, int *h, char **grid)
+{
+	if (!grid || !grid[0])
+		return (EXIT_FAILURE);
+	*w = ft_strlen(grid[0]);
+	*h = 0;
+	while (grid[*h])
+		(*h)++;
+	*w *= TILE_SIZE;
+	*h *= TILE_SIZE;
+	return (EXIT_SUCCESS);
+}
+
+bool    is_has_wall(double x, double y, char **grid, t_game *g)
 {
     int new_x;
     int new_y;
+	int	mini_map_width;
+	int	mini_map_height;
 
-
-	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+	if (get_dimension(&mini_map_width, &mini_map_height, grid))
+		cleanupAndExit("get_dimension", "failed!", g);
+	// printf("width : %d\n", mini_map_width);
+	// printf("height : %d\n", mini_map_height);
+	if (x < 0 || x >= mini_map_width || y < 0 || y >= mini_map_height)
         return true;
     new_x = floor(x / TILE_SIZE);
     new_y = floor(y / TILE_SIZE);

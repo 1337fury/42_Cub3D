@@ -1,0 +1,9 @@
+.DS_Store
+.vscode
+*.o
+commit_script.sh
+help.c
+*test*
+tofree
+forms
+a.out

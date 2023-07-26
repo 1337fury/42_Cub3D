@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/24 18:59:52 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/26 18:11:34 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@
 #include <string.h>
 #include <float.h>
 
-# define WIDTH 825
-# define HEIGHT 350
-# define TILE_SIZE 25
+# define WIDTH 1650
+# define HEIGHT 700
+# define TILE_SIZE 15
+// # define MAP_SCALE 0.2
 
 # define FOV_ANGLE 			60 * (M_PI / 180)
 # define WALL_STRIP_WIDTH 	1
-# define NUM_RAYS 			WIDTH / WALL_STRIP_WIDTH	
+# define NUM_RAYS 			WIDTH / WALL_STRIP_WIDTH
 
 #define USAGE "./cub3D <PATH>/map.cub"
 #define MAP   "Invalid file extension"
@@ -42,7 +43,7 @@ struct s_game;
 struct s_player;
 
 typedef int (*_update)(void *);
-typedef bool (*_has_wall)(double, double, char **);
+typedef bool (*_has_wall)(double, double, char **, struct s_game*);
 typedef void (*_cast)(int, struct s_game*);
 typedef void (*_render)(struct s_game*, int);
 
@@ -65,7 +66,7 @@ typedef struct	s_player
 {
 	double		x;
 	double		y;
-	int			raduis;
+	float		raduis;
 	int			turn_dir;
 	int			walk_dir;
 	double		rot_angle;
@@ -125,7 +126,17 @@ typedef struct s_game
 	t_gc		*gc;
 }	t_game;
 
+typedef struct s_point
+{
+    int x;
+    int y;
+}	t_point;
 
+typedef struct s_rectangle
+{
+    t_point top_left;
+    t_point bottom_right;
+}	t_rectangle;
 
 int     _parser(char *file_path, t_config *config, t_gc *gc);
 int		parse_file(char *file_path, t_config *config);
@@ -153,13 +164,13 @@ int 	check_two(t_config *conf, t_gc *gc);
 int		check_three(t_config *conf);
 int		check_four(t_config *conf);
 
-int		game_engine();
+int		game_engine(t_game *game, t_config *conf);
 int		grid_render(t_game *game);
-int		player_rander(t_game *game);
+int		player_render(t_game *game);
 void    _fill(t_game *g, int y, int x, unsigned int color);
 void	_circle(t_game *g, int x, int y, int r, int color);
 void	draw_line(t_game *g, int x0, int y0, int x1, int y1);
-bool    is_has_wall(double x, double y, char **grid);
+bool    is_has_wall(double x, double y, char **grid, t_game *g);
 
 //
 int		cast_all_rays(t_game *game);

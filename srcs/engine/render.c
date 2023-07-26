@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:28:41 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/24 20:17:23 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/26 21:53:34 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,15 @@ void	cast(int coloumn_id, t_game *g)
 	float	next_ver_touch_x = xintercept;
 	float	next_ver_touch_y = yintercept;
 
-	if (rays[coloumn_id].is_ray_facing_left)
-		next_ver_touch_x--;
-
+	// if (rays[coloumn_id].is_ray_facing_left)
+	// 	next_ver_touch_x--;
 	while (next_ver_touch_x >= 0 && next_ver_touch_x <= WIDTH && next_ver_touch_y >= 0 && next_ver_touch_y <= HEIGHT)
 	{
-		if (map->has_wall(next_ver_touch_x, next_ver_touch_y, map->grid))
+		if (map->has_wall(next_ver_touch_x - (rays[coloumn_id].is_ray_facing_left), next_ver_touch_y, map->grid, g))
 		{
 			found_ver_wall_hit = true;
 			ver_wall_hit_x = next_ver_touch_x;
 			ver_wall_hit_y = next_ver_touch_y;
-
 			// rays[coloumn_id].wall_hit_x = ver_wall_hit_x;
 			// rays[coloumn_id].wall_hit_y = ver_wall_hit_y;
 			// draw_line(g, p->x, p->y, ver_wall_hit_x, ver_wall_hit_y);
@@ -114,12 +112,12 @@ void	cast(int coloumn_id, t_game *g)
 	float		next_horz_touch_y = yintercept;
 	
 
-	if (rays[coloumn_id].is_ray_facing_up)
-		next_horz_touch_y--;
+	// if (rays[coloumn_id].is_ray_facing_up)
+	// 	next_horz_touch_y--;
 
 	while (next_horz_touch_x >= 0 && next_horz_touch_x <= WIDTH && next_horz_touch_y >= 0 && next_horz_touch_y <= HEIGHT)
 	{
-		if (map->has_wall(next_horz_touch_x, next_horz_touch_y, map->grid))
+		if (map->has_wall(next_horz_touch_x, next_horz_touch_y - (rays[coloumn_id].is_ray_facing_up), map->grid, g))
 		{
 			found_horz_wall_hit = true;
 			horz_wall_hit_x = next_horz_touch_x;
@@ -264,12 +262,14 @@ int p_update(void *para)
     p = &game->player;
     map = &game->g_conf.map;
 
-    p->rot_angle += p->turn_dir * p->rot_speed;
+    p->rot_angle += p->turn_dir * p->rot_speed;;
+	// printf("turn dir : %d\n", p->turn_dir);
+	// printf("rot angle : %f\n", p->rot_angle);
     move_step = p->walk_dir * p->move_speed;
     new_x = p->x + cos(p->rot_angle) * move_step;
     new_y = p->y + sin(p->rot_angle) * move_step;
 	map->has_wall = is_has_wall;
-    if (!map->has_wall(new_x, new_y, map->grid))
+    if (!map->has_wall(new_x, new_y, map->grid, game))
     {
         p->x = new_x;
         p->y = new_y;
@@ -277,7 +277,7 @@ int p_update(void *para)
     return (EXIT_SUCCESS);
 }
 
-int player_rander(t_game *game)
+int player_render(t_game *game)
 {
     t_player    *p;
 
@@ -287,6 +287,6 @@ int player_rander(t_game *game)
     p->update = p_update;
     p->update(game);
 	
-    _circle(game, p->x, p->y, p->raduis,  0xffffffff);
+    // _circle(game, p->x, p->y, p->raduis,  0xffffffff);
     return (EXIT_SUCCESS);
 }
