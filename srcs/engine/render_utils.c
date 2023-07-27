@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:30:24 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/26 21:57:15 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/26 22:53:13 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,7 @@ bool    is_has_wall(double x, double y, char **grid, t_game *g)
 
 	if (get_dimension(&mini_map_width, &mini_map_height, grid))
 		cleanupAndExit("get_dimension", "failed!", g);
-	// printf("width : %d\n", mini_map_width);
-	// printf("height : %d\n", mini_map_height);
+
 	if (x < 0 || x >= mini_map_width || y < 0 || y >= mini_map_height)
         return true;
     new_x = floor(x / TILE_SIZE);
