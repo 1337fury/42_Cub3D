@@ -45,7 +45,10 @@ SRC =  \
  ./_strlen.c \
  ./is_empty.c \
  ./is_space.c \
- ./_max.c
+ ./_max.c \
+ ./_2D_length.c \
+ ./free_tab.c
+ 
 
 OBJECTS = $(SRC:.c=.o)
 
