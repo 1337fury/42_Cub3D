@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 19:26:33 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/16 18:20:56 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/27 12:39:59 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,7 @@ int		_strlen(char *s, char c);
 bool	is_empty(char *s);
 bool	is_space(char c);
 int		get_max(int *order);
+int		_2D_length(char **tab);
+void	free_tab(char **tab);
 
 #endif
