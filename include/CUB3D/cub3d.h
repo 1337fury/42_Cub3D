@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/26 18:11:34 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/27 15:06:45 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct	s_map
 
 typedef struct   s_info
 {
-    void    *value;
+    char    *value;
     int     order;
 }   t_info;
 
@@ -103,10 +103,17 @@ typedef struct	s_colors
 	t_info  ceiling;
 }				t_colors;
 
+typedef struct s_hex
+{
+    unsigned int	ceil;
+    unsigned int	floor;
+} t_hex;
+
 typedef struct	s_config
 {
 	t_textures	textures;
 	t_colors	colors;
+	t_hex		hex_colors;
 	t_map		map;
 }				t_config;
 
