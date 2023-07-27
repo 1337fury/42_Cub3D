@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/26 22:09:14 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/27 11:03:11 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ void	clear_image(mlx_image_t *image)
 		j = 0;
 		while (j < HEIGHT)
 		{
-			mlx_put_pixel(image, i, j, 0x00000000);
+			if (j < HEIGHT / 2)
+				mlx_put_pixel(image, i, j, 0xFF000066);
+			else
+				mlx_put_pixel(image, i, j, 0x0000ff55);
 			j++;
 		}
 		i++;
@@ -166,9 +169,9 @@ void rotate_by_mouse(double xpos, double ypos, void* param)
 
 	(void)ypos;
 	game = (t_game *)param;
-	mlx_set_mouse_pos(game->mlx, 200, 200);
+	mlx_set_mouse_pos(game->mlx, WIDTH / 2, HEIGHT / 2);
 	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_HIDDEN);
-	game->player.turn_dir = xpos - 200;
+	game->player.turn_dir = xpos - (WIDTH / 2);
 }
 
 int game_engine(t_game *game, t_config *conf)
