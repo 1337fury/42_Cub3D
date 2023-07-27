@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:28:41 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/26 21:53:34 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/26 22:56:29 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,8 +263,6 @@ int p_update(void *para)
     map = &game->g_conf.map;
 
     p->rot_angle += p->turn_dir * p->rot_speed;;
-	// printf("turn dir : %d\n", p->turn_dir);
-	// printf("rot angle : %f\n", p->rot_angle);
     move_step = p->walk_dir * p->move_speed;
     new_x = p->x + cos(p->rot_angle) * move_step;
     new_y = p->y + sin(p->rot_angle) * move_step;
@@ -276,6 +274,7 @@ int p_update(void *para)
     }
     return (EXIT_SUCCESS);
 }
+
 
 int player_render(t_game *game)
 {
