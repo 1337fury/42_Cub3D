@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/27 15:06:45 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/31 20:48:29 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@
 #include <errno.h>
 #include <string.h>
 #include <float.h>
+
+# define TEXTURE_WIDTH 64
+# define TEXTURE_HEIGHT 64
 
 # define WIDTH 1650
 # define HEIGHT 700
@@ -123,6 +126,14 @@ typedef struct s_data
     int point;
 } t_data;
 
+typedef struct s_game_tex
+{
+    mlx_texture_t	*north;
+    mlx_texture_t	*south;
+    mlx_texture_t	*west;
+    mlx_texture_t	*east;
+}	t_game_tex;
+
 typedef struct s_game
 {
 	mlx_t		*mlx;
@@ -131,6 +142,7 @@ typedef struct s_game
 	t_config	g_conf;
 	t_ray		rays[NUM_RAYS];
 	t_gc		*gc;
+	t_game_tex	g_tex;
 }	t_game;
 
 typedef struct s_point
@@ -161,6 +173,7 @@ char    *to_str(char c, t_gc *gc);
 void    fill(int **order, t_config *conf);
 char    _next(char *map, int i);
 void	cleanupAndExit(char *error, char *details, t_game *game);
+int		get_colors(t_colors *colors, t_hex *hex);
 
 int		 _init_all(t_gc **gc, t_config *config, t_game *game);
 int		start_check(t_config *config, t_gc *gc);
@@ -183,5 +196,7 @@ bool    is_has_wall(double x, double y, char **grid, t_game *g);
 int		cast_all_rays(t_game *game);
 
 void    _game_loop(t_game *game);
+
+unsigned int	rgba_to_hex(int r, int g, int b);
 
 #endif
