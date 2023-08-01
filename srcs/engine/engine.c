@@ -6,11 +6,33 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/27 11:03:11 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/31 20:51:22 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int	get_game_textures(t_game *g)
+{
+	t_game_tex	*g_textures;
+
+	if (!g)
+		return (EXIT_FAILURE);
+	g_textures = &g->g_tex;
+	g_textures->north = mlx_load_png(g->g_conf.textures.north.value);
+	if (!g_textures->north)
+		return (EXIT_FAILURE);
+	g_textures->south = mlx_load_png(g->g_conf.textures.south.value);
+	if (!g_textures->south)
+		return (EXIT_FAILURE);
+	g_textures->west = mlx_load_png(g->g_conf.textures.west.value);
+	if (!g_textures->west)
+		return (EXIT_FAILURE);
+	g_textures->east = mlx_load_png(g->g_conf.textures.east.value);
+	if (!g_textures->east)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
 
 void	render(t_game *game, int inx)
 {
@@ -62,11 +84,13 @@ int key_press(void *param)
     return (EXIT_SUCCESS);
 }
 
-void	clear_image(mlx_image_t *image)
+int	clear_image(t_game *g)
 {
-	int	i;
-	int	j;
-
+	int		i;
+	int		j;
+	
+	if (!g)
+		return (EXIT_FAILURE);
 	i = 0;
 	while (i < WIDTH)
 	{
@@ -74,53 +98,60 @@ void	clear_image(mlx_image_t *image)
 		while (j < HEIGHT)
 		{
 			if (j < HEIGHT / 2)
-				mlx_put_pixel(image, i, j, 0xFF000066);
+				mlx_put_pixel(g->image, i, j, g->g_conf.hex_colors.ceil);
 			else
-				mlx_put_pixel(image, i, j, 0x0000ff55);
+				mlx_put_pixel(g->image, i, j, g->g_conf.hex_colors.floor);
 			j++;
 		}
 		i++;
 	}
+	return (EXIT_SUCCESS);
 }
+
 
 void draw_rectangle(void *image_ptr, t_rectangle rect)
 {
-    int width;
-    int height;
+    int			width;
+    int			height;
+	uint32_t	color;
 
 	width = rect.bottom_right.x - rect.top_left.x;
 	height = rect.bottom_right.y - rect.top_left.y;
 
+	color = 0x800080FF;
     for (int x = 0; x <= width; x++) 
 	{
 		if (rect.top_left.x + x >= 0 && rect.top_left.x + x < WIDTH && rect.top_left.y >= 0 && rect.top_left.y < HEIGHT)
-			mlx_put_pixel(image_ptr, rect.top_left.x + x, rect.top_left.y, 0xFFFFFF); // Draw top edge
+			mlx_put_pixel(image_ptr, rect.top_left.x + x, rect.top_left.y, color); // Draw top edge
 		if (rect.top_left.x + x >= 0 && rect.top_left.x + x < WIDTH && rect.bottom_right.y >= 0 && rect.bottom_right.y < HEIGHT)
-			mlx_put_pixel(image_ptr, rect.top_left.x + x, rect.bottom_right.y, 0xFFFFFF); // Draw bottom edge
+			mlx_put_pixel(image_ptr, rect.top_left.x + x, rect.bottom_right.y, color); // Draw bottom edge
     }
 
     for (int y = 0; y <= height; y++) 
 	{
         if (rect.top_left.y + y >= 0 && rect.top_left.y + y < HEIGHT)
-			mlx_put_pixel(image_ptr, rect.top_left.x, rect.top_left.y + y, 0xFFFFFF); // Draw left edge
+			mlx_put_pixel(image_ptr, rect.top_left.x, rect.top_left.y + y, color); // Draw left edge
 		if (rect.top_left.y + y >= 0 && rect.bottom_right.y + y < HEIGHT)
-			mlx_put_pixel(image_ptr, rect.bottom_right.x, rect.top_left.y + y, 0xFFFFFF); // Draw right edge
+			mlx_put_pixel(image_ptr, rect.bottom_right.x, rect.top_left.y + y, color); // Draw right edge
     }
 }
 
-
 int render3d_projection_walls(t_game *g)
 {
-    t_ray* ray;
-    int i;
-    float dis_proj_plane;
-    float wall_strip_h;
-    t_rectangle rect;
+    t_ray*		ray;
+    int			i;
+    float		dis_proj_plane;
+    float		wall_strip_h;
+    t_rectangle	rect;
 
+	if (!g)
+		return (EXIT_FAILURE);
     i = 0;
     while(i < NUM_RAYS)
     {
         ray = &g->rays[i];
+		if (!ray)
+			return (EXIT_FAILURE);
         dis_proj_plane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
 
         // Fix the fisheye effect by correctly finding the distance
@@ -136,31 +167,31 @@ int render3d_projection_walls(t_game *g)
         // calculate the bottom right part correctly
         rect.bottom_right.x = rect.top_left.x + WALL_STRIP_WIDTH;
         rect.bottom_right.y = rect.top_left.y + wall_strip_h;
-        
         draw_rectangle(g->image, rect);
         i++;
     }
     return (EXIT_SUCCESS);    
 }
 
-
 void	game_spirit(void *data)
 {
     t_game  *game;
 
     game = (t_game *)data;
-	clear_image(game->image);
-	render3d_projection_walls(game);
+	if (clear_image(game))
+		cleanupAndExit("clear image", "failed!", game);
+	if (render3d_projection_walls(game))
+		cleanupAndExit("3D projection", "failed!", game);
     if (grid_render(game))
-         cleanupAndExit("grid_render", "function failed!", game);
+         cleanupAndExit("grid render", "failed!", game);
     if (player_render(game))
-        cleanupAndExit("player_render", "function failed!", game);
+        cleanupAndExit("player render", "failed!", game);
 	if (cast_all_rays(game))
-		cleanupAndExit("Ray caster", "function failed!", game);
+		cleanupAndExit("Ray caster", "failed!", game);
 	if (rays_render(game))
-		cleanupAndExit("rays_render", "function failed!", game);
+		cleanupAndExit("rays render", "failed!", game);
     if (key_press(game))
-        cleanupAndExit("key_press", "function failed!", game);
+        cleanupAndExit("key press", "failed!", game);
 }
 // [GIMI] M9awed√
 void rotate_by_mouse(double xpos, double ypos, void* param)
@@ -178,7 +209,11 @@ int game_engine(t_game *game, t_config *conf)
 {
     if (!game || !conf)
         return (EXIT_FAILURE);
+	if (get_colors(&conf->colors, &conf->hex_colors))
+		return (EXIT_FAILURE);
     game->g_conf = *conf;
+	if (get_game_textures(game))
+		return (EXIT_FAILURE);
     if (!mlx_loop_hook(game->mlx, (void *)game_spirit, game))
         return (_perror("mlx loop hook", "failed"), 1);
 	// mlx_cursor_hook(game->mlx, rotate_by_mouse, game);
