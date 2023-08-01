@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 15:40:05 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/26 15:40:48 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/31 12:47:32 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int _start_parsing(char *content, t_config *config, t_gc *gc)
         config->map.grid = ft_split(config->map.flat, '\n');
     return (EXIT_SUCCESS);
 }
+
 
 int _parser(char *file_path, t_config *config, t_gc *gc)
 {
