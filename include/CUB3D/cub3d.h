@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/31 20:48:29 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/01 13:35:43 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include <string.h>
 #include <float.h>
 
+# define NUM_TEXTURES 4
 # define TEXTURE_WIDTH 64
 # define TEXTURE_HEIGHT 64
 
@@ -128,6 +129,10 @@ typedef struct s_data
 
 typedef struct s_game_tex
 {
+	size_t			*n_buffer;
+	size_t			*s_buffer;
+	size_t			*w_buffer;
+	size_t			*e_buffer;
     mlx_texture_t	*north;
     mlx_texture_t	*south;
     mlx_texture_t	*west;
@@ -174,6 +179,7 @@ void    fill(int **order, t_config *conf);
 char    _next(char *map, int i);
 void	cleanupAndExit(char *error, char *details, t_game *game);
 int		get_colors(t_colors *colors, t_hex *hex);
+void	*_memory(size_t count, size_t size, t_gc *gc);
 
 int		 _init_all(t_gc **gc, t_config *config, t_game *game);
 int		start_check(t_config *config, t_gc *gc);
@@ -197,6 +203,6 @@ int		cast_all_rays(t_game *game);
 
 void    _game_loop(t_game *game);
 
-unsigned int	rgba_to_hex(int r, int g, int b);
+unsigned int	rgba_to_hex(int r, int g, int b, int tr);
 
 #endif
