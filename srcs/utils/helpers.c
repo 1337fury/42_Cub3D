@@ -6,11 +6,19 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 22:18:08 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/21 15:48:04 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/31 12:47:36 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+unsigned int	rgba_to_hex(int r, int g, int b)
+{
+	int	a;
+
+	a = 255;
+    return ((r << 24 | g << 16 | b << 8 | a));
+}
 
 char    _next(char *map, int i)
 {
@@ -29,6 +37,25 @@ char    *to_str(char c, t_gc *gc)
     s[0] = c;
     s[1] = '\0';
     return (s);
+}
+
+int		get_colors(t_colors *colors, t_hex *hex)
+{
+	char	**rgb;
+
+	if (!colors)
+		return (EXIT_FAILURE);
+	rgb = ft_split(colors->ceiling.value, ',');
+	if (!rgb || _2D_length(rgb) < 3)
+		return (EXIT_FAILURE);
+	hex->ceil = rgba_to_hex(ft_atoi(rgb[0]), ft_atoi(rgb[1]), ft_atoi(rgb[2]));
+	free_tab(rgb);
+	rgb = ft_split(colors->floor.value, ',');
+	if (!rgb || _2D_length(rgb) < 3)
+		return (EXIT_FAILURE);
+	hex->floor = rgba_to_hex(ft_atoi(rgb[0]), ft_atoi(rgb[1]), ft_atoi(rgb[2]));
+	free_tab(rgb);
+	return (EXIT_SUCCESS);
 }
 
 void    fill(int **order, t_config *conf)
