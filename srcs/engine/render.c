@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,7 +7,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:28:41 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/26 22:56:29 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/07/29 13:24:14 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +181,7 @@ int grid_render(t_game *game)
         x = -1;
         while (grid[y][++x])
         {
-            if (ft_strchr(" 0", grid[y][x]))
+            if (ft_strchr("0", grid[y][x]))
                 _fill(game, y * TILE_SIZE, x * TILE_SIZE, 0x00000000);
             else if (ft_strchr("NSWE", grid[y][x]))
             {
@@ -191,7 +192,7 @@ int grid_render(t_game *game)
                     game->player.x = x * TILE_SIZE;
                 }
             }
-            else
+            else if (grid[y][x] == '1')
                 _fill(game, y * TILE_SIZE, x * TILE_SIZE, 0xffffffff);
         }
     }
@@ -224,16 +225,13 @@ int	init_ray(t_ray *ray, float angle)
 	return (EXIT_SUCCESS);
 }
 
-
 int	cast_all_rays(t_game *game)
 {
-    int		column_id;
     float	ray_angle;
     int		i;
 
 	if (!game)
 		return (EXIT_FAILURE);
-    column_id = 0;
 	ray_angle = game->player.rot_angle - (FOV_ANGLE / 2);
     i = 0;
     while (i < NUM_RAYS)
@@ -241,9 +239,8 @@ int	cast_all_rays(t_game *game)
 		if (init_ray(&game->rays[i], normalize(&ray_angle)))
 			return (EXIT_FAILURE);
 		game->rays[i].cast = cast;
-        game->rays[i].cast(column_id, game);
+        game->rays[i].cast(i, game);
         ray_angle +=  FOV_ANGLE / NUM_RAYS;
-        column_id++;
 		i++;
     }
 	return (EXIT_SUCCESS);
@@ -262,11 +259,12 @@ int p_update(void *para)
     p = &game->player;
     map = &game->g_conf.map;
 
-    p->rot_angle += p->turn_dir * p->rot_speed;;
+    p->rot_angle += p->turn_dir * p->rot_speed;
     move_step = p->walk_dir * p->move_speed;
     new_x = p->x + cos(p->rot_angle) * move_step;
     new_y = p->y + sin(p->rot_angle) * move_step;
 	map->has_wall = is_has_wall;
+
     if (!map->has_wall(new_x, new_y, map->grid, game))
     {
         p->x = new_x;
@@ -274,7 +272,6 @@ int p_update(void *para)
     }
     return (EXIT_SUCCESS);
 }
-
 
 int player_render(t_game *game)
 {
