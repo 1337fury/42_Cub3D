@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/01 13:39:12 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/02 12:26:24 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,70 +166,66 @@ int	clear_image(t_game *g)
 	return (EXIT_SUCCESS);
 }
 
-
-void draw_rectangle(void *image_ptr, t_rectangle rect)
-{
-    int			width;
-    int			height;
-	uint32_t	color;
-
-	width = rect.bottom_right.x - rect.top_left.x;
-	height = rect.bottom_right.y - rect.top_left.y;
-
-	color = 0x800080FF;
-    for (int x = 0; x <= width; x++) 
-	{
-		if (rect.top_left.x + x >= 0 && rect.top_left.x + x < WIDTH && rect.top_left.y >= 0 && rect.top_left.y < HEIGHT)
-			mlx_put_pixel(image_ptr, rect.top_left.x + x, rect.top_left.y, color); // Draw top edge
-		if (rect.top_left.x + x >= 0 && rect.top_left.x + x < WIDTH && rect.bottom_right.y >= 0 && rect.bottom_right.y < HEIGHT)
-			mlx_put_pixel(image_ptr, rect.top_left.x + x, rect.bottom_right.y, color); // Draw bottom edge
-    }
-
-    for (int y = 0; y <= height; y++) 
-	{
-        if (rect.top_left.y + y >= 0 && rect.top_left.y + y < HEIGHT)
-			mlx_put_pixel(image_ptr, rect.top_left.x, rect.top_left.y + y, color); // Draw left edge
-		if (rect.top_left.y + y >= 0 && rect.bottom_right.y + y < HEIGHT)
-			mlx_put_pixel(image_ptr, rect.bottom_right.x, rect.top_left.y + y, color); // Draw right edge
-    }
-}
-
 int render3d_projection_walls(t_game *g)
 {
-    t_ray*		ray;
-    int			i;
-    float		dis_proj_plane;
-    float		wall_strip_h;
-    t_rectangle	rect;
+    t_ray* ray;
+    int i;
+    float dis_proj_plane;
+    float wall_strip_h;
 
-	if (!g)
-		return (EXIT_FAILURE);
+    if (!g)
+        return (EXIT_FAILURE);
+
     i = 0;
-    while(i < NUM_RAYS)
+    while (i < NUM_RAYS)
     {
         ray = &g->rays[i];
-		if (!ray)
-			return (EXIT_FAILURE);
+        if (!ray)
+            return (EXIT_FAILURE);
+
         dis_proj_plane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
 
         // Fix the fisheye effect by correctly finding the distance
         float correctWallDistance = ray->distance * cos(ray->ray_angle - g->player.rot_angle);
-        
+
         // Use this corrected distance to find the height of the wall strip
         wall_strip_h = (TILE_SIZE / correctWallDistance) * dis_proj_plane;
 
-        // calculate top left part correctly
-        rect.top_left.x = i * WALL_STRIP_WIDTH;
-        rect.top_left.y = (HEIGHT / 2) - (wall_strip_h / 2);
-        
-        // calculate the bottom right part correctly
-        rect.bottom_right.x = rect.top_left.x + WALL_STRIP_WIDTH;
-        rect.bottom_right.y = rect.top_left.y + wall_strip_h;
-        draw_rectangle(g->image, rect);
+        // [START WORKING WITH TEXTURES]
+        int wall_top_pixel = (HEIGHT / 2) - (wall_strip_h / 2);
+        wall_top_pixel = wall_top_pixel < 0 ? 0 : wall_top_pixel;
+
+        int wall_bottom_pixel = (HEIGHT / 2) + (wall_strip_h / 2);
+        wall_bottom_pixel = wall_bottom_pixel > HEIGHT ? HEIGHT : wall_bottom_pixel;
+
+        int tex_offset_x;
+        if (ray->was_hit_vertical)
+            tex_offset_x = (int)(ray->wall_hit_y) % TEXTURE_WIDTH;
+        else
+            tex_offset_x = (int)(ray->wall_hit_x) % TEXTURE_WIDTH;
+
+
+        for (int y = wall_top_pixel; y < wall_bottom_pixel; y++)
+        {
+            int distanceFromTop = y - (HEIGHT / 2) + (wall_strip_h / 2);
+            int tex_offset_y = (distanceFromTop * TEXTURE_HEIGHT) / wall_strip_h;
+
+            // Make sure tex_offset_y is within the texture height range
+            tex_offset_y = tex_offset_y < 0 ? 0 : (tex_offset_y >= TEXTURE_HEIGHT ? TEXTURE_HEIGHT - 1 : tex_offset_y);
+
+            // set the color of the wall based on the color from the texture
+            uint32_t texelColor = g->g_tex.s_buffer[(TEXTURE_WIDTH * tex_offset_y) + tex_offset_x];
+            mlx_put_pixel(g->image, i, y, texelColor);
+        }
+
+        // [END WORKING WITH TEXTURES]
+
         i++;
     }
-    return (EXIT_SUCCESS);    
+
+    return (EXIT_SUCCESS);
 }
+
 
 void	game_spirit(void *data)
 {
@@ -274,15 +270,6 @@ int game_engine(t_game *game, t_config *conf)
 		return (EXIT_FAILURE);
 	if (create_costum_texture_buffer(&game->g_tex, game->gc))
 		return (EXIT_FAILURE);
-	
-	/*
-		-test
-	*/
-	for(int i = 0; i < (64 * 64); i++)
-	{
-		printf("%zu\n", game->g_tex.n_buffer[i]);
-	}
-
     if (!mlx_loop_hook(game->mlx, (void *)game_spirit, game))
         return (_perror("mlx loop hook", "failed"), 1);
 	// mlx_cursor_hook(game->mlx, rotate_by_mouse, game);
