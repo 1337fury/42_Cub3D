@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/01 13:35:43 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/02 10:53:01 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@
 #include <float.h>
 
 # define NUM_TEXTURES 4
-# define TEXTURE_WIDTH 64
-# define TEXTURE_HEIGHT 64
+# define TEXTURE_WIDTH 15
+# define TEXTURE_HEIGHT 15
 
 # define WIDTH 1650
 # define HEIGHT 700
 # define TILE_SIZE 15
-// # define MAP_SCALE 0.2
+# define SCALE 0.2
 
 # define FOV_ANGLE 			60 * (M_PI / 180)
 # define WALL_STRIP_WIDTH 	1
