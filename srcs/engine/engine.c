@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/02 12:26:24 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/06 09:42:53 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,6 @@ int render3d_projection_walls(t_game *g)
     return (EXIT_SUCCESS);
 }
 
-
 void	game_spirit(void *data)
 {
     t_game  *game;
@@ -236,8 +235,8 @@ void	game_spirit(void *data)
 		cleanupAndExit("clear image", "failed!", game);
 	if (render3d_projection_walls(game))
 		cleanupAndExit("3D projection", "failed!", game);
-    if (grid_render(game))
-         cleanupAndExit("grid render", "failed!", game);
+	if (grid_render(game))
+		cleanupAndExit("grid render", "failed!", game);
     if (player_render(game))
         cleanupAndExit("player render", "failed!", game);
 	if (cast_all_rays(game))
@@ -259,16 +258,35 @@ void rotate_by_mouse(double xpos, double ypos, void* param)
 	game->player.turn_dir = xpos - (WIDTH / 2);
 }
 
-int game_engine(t_game *game, t_config *conf)
+int	before_start(t_game *g)
 {
-    if (!game || !conf)
-        return (EXIT_FAILURE);
-	if (get_colors(&conf->colors, &conf->hex_colors))
+	t_player	*p;
+	t_textures	*tex;
+
+	p = &g->player;
+	tex = &g->g_conf.textures;
+
+	if (!p || !tex)
 		return (EXIT_FAILURE);
-    game->g_conf = *conf;
+	if (p->x == -1 || p->y == -1)
+		return (_perror("Error", "Player not added to map"), 1);
+	if (tex->east.order == -1 || tex->north.order == -1
+		|| tex->south.order == -1 || tex->west.order == -1)
+			return (_perror("Error", "Missing texture"), 1);
+	return (EXIT_SUCCESS);
+}
+
+int game_engine(t_game *game)
+{
+    if (!game)
+        return (EXIT_FAILURE);
+	if (get_colors(&game->g_conf.colors, &game->g_conf.hex_colors))
+		return (EXIT_FAILURE);
 	if (get_game_textures(game))
 		return (EXIT_FAILURE);
 	if (create_costum_texture_buffer(&game->g_tex, game->gc))
+		return (EXIT_FAILURE);
+	if (before_start(game))
 		return (EXIT_FAILURE);
     if (!mlx_loop_hook(game->mlx, (void *)game_spirit, game))
         return (_perror("mlx loop hook", "failed"), 1);
