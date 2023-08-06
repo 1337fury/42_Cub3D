@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/02 10:53:01 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/05 22:53:47 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,18 @@ typedef struct	s_player
 	_update		update;
 }	t_player;
 
+typedef struct	s_dimension
+{
+	int	height;
+	int	width;
+}				t_dimension;
+
 typedef struct	s_map
 {
-    char    *flat;
-	char	**grid;
-    int     order;
+	t_dimension	dim;
+    char    	*flat;
+	char		**grid;
+    int     	order;
 	_has_wall	has_wall;
 }				t_map;
 
@@ -182,15 +189,15 @@ int		get_colors(t_colors *colors, t_hex *hex);
 void	*_memory(size_t count, size_t size, t_gc *gc);
 
 int		 _init_all(t_gc **gc, t_config *config, t_game *game);
-int		start_check(t_config *config, t_gc *gc);
+int		start_check(t_game *game, t_config *config);
 char    *_process_line(char *content, t_config *config, t_gc *gc);
 
 int 	check_one(t_config *conf, t_gc *gc);
 int 	check_two(t_config *conf, t_gc *gc);
-int		check_three(t_config *conf);
+int		check_three(t_game *game);
 int		check_four(t_config *conf);
 
-int		game_engine(t_game *game, t_config *conf);
+int		game_engine(t_game *game);
 int		grid_render(t_game *game);
 int		player_render(t_game *game);
 void    _fill(t_game *g, int y, int x, unsigned int color);
