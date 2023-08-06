@@ -6,11 +6,42 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 15:40:05 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/31 12:47:32 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/05 22:48:35 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int	_max_line(char **grid)
+{
+	size_t	max;
+	int		i;
+
+	max = ft_strlen(grid[0]);
+	i = 0;
+	while (grid[++i])
+		if (max < ft_strlen(grid[i]))
+			max = ft_strlen(grid[i]);
+	return (max);
+}
+
+int	_dimension(t_config *conf)
+{
+	int	*height;
+	int	*width;
+
+	if (!conf || !conf->map.grid)
+		return (EXIT_FAILURE);
+	height = &conf->map.dim.height;
+	width = &conf->map.dim.width;
+	*width = _max_line(conf->map.grid);
+	*height = 0;
+	while (conf->map.grid[*height])
+		(*height)++;
+	*width *= TILE_SIZE;
+	*height *= TILE_SIZE;
+	return (EXIT_SUCCESS);
+}
 
 int read_file(int fd, char **content, t_gc *gc)
 {
@@ -35,7 +66,6 @@ int _start_parsing(char *content, t_config *config, t_gc *gc)
     return (EXIT_SUCCESS);
 }
 
-
 int _parser(char *file_path, t_config *config, t_gc *gc)
 {
     int     fd;
@@ -47,9 +77,11 @@ int _parser(char *file_path, t_config *config, t_gc *gc)
     if (fd == -1)
         return (_perror("open", strerror(errno)), 1);
     if (read_file(fd, &f_content, gc))
-        return (_perror("read", F_READ), 1);
+        return (close(fd), _perror("read", F_READ), 1);
     if (_start_parsing(f_content, config, gc))
-        return (EXIT_FAILURE);
+        return (close(fd), EXIT_FAILURE);
+	 if (_dimension(config))
+	 	return (close(fd), _perror("get dimension", "failed!"), 1);
     close(fd);
     return (EXIT_SUCCESS);
 }
