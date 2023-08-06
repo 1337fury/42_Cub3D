@@ -169,7 +169,6 @@ void	cast(int coloumn_id, t_game *g)
 
 int grid_render(t_game *game)
 {
-    static bool i;
     int         x;
     int         y;
     char        **grid;
@@ -184,19 +183,11 @@ int grid_render(t_game *game)
             if (ft_strchr("0", grid[y][x]))
                 _fill(game, y * TILE_SIZE, x * TILE_SIZE, 0x00000000);
             else if (ft_strchr("NSWE", grid[y][x]))
-            {
                 _fill(game, y * TILE_SIZE, x * TILE_SIZE, 0x00000000);
-                if (!i)
-                {
-                    game->player.y = y * TILE_SIZE;
-                    game->player.x = x * TILE_SIZE;
-                }
-            }
             else if (grid[y][x] == '1')
                 _fill(game, y * TILE_SIZE, x * TILE_SIZE, 0xffffffff);
         }
     }
-    i = true;
     return (EXIT_SUCCESS);
 }
 
