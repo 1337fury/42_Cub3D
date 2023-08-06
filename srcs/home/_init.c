@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 00:31:26 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/31 22:08:02 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/06 09:36:47 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,18 @@ int _init_all(t_gc **gc, t_config *config, t_game *game)
     return (0);
 }
 
-int start_check(t_config *config, t_gc *gc)
+int start_check(t_game *g, t_config *config)
 {
-    if (check_one(config, gc))
+	if (!config)
+		return (_perror("Error: ", "Game configuration issue."), 1);
+	g->g_conf = *config;
+    if (check_one(&g->g_conf, g->gc))
         return (EXIT_FAILURE);
-    if (check_two(config, gc))
+    if (check_two(&g->g_conf, g->gc))
         return (EXIT_FAILURE);
-    if (check_three(config))
+    if (check_three(g))
         return (EXIT_FAILURE);
-    if (check_four(config))
+    if (check_four(&g->g_conf))
         return (EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }
