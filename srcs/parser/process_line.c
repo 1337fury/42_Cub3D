@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 00:23:48 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/27 15:01:22 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/05 22:03:32 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void    _map_(char *line, t_map *map, t_data *data, t_gc *gc)
 {
     static int  i;
 
-    if (!line)
+    if (!line || !map || !data || !gc)
         return ;
     map->flat = gc_strainer(gc, ft_strjoin(map->flat, line));
     map->flat = gc_strainer(gc, ft_strjoin(map->flat, "\n"));
@@ -77,6 +77,8 @@ char    *_process_line(char *content, t_config *config, t_gc *gc)
     char    *line;
     int     l;
 
+	if (!content || !config || !gc)
+		return (NULL);
     l = _strlen(content, '\n');
     line = gc_strainer(gc, ft_substr(content, 0, l));
     if (!line)
