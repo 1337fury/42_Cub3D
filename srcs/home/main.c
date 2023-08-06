@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:45:03 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/31 20:10:12 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/05 22:54:12 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int main(int ac, char **av)
         return (EXIT_FAILURE);
     if (_parser(av[1], &config, gc))
         return (EXIT_FAILURE);
-    if (start_check(&config, gc))
+    if (start_check(&game, &config))
         return (EXIT_FAILURE);
-    if (game_engine(&game, &config))
+    if (game_engine(&game))
         return (EXIT_FAILURE);
     /*
         -print grid
