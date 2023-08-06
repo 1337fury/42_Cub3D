@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:30:24 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/02 10:01:38 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/05 20:32:33 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,19 +66,6 @@ void	draw_line(t_game *g, int x0, int y0, int x1, int y1)
 	}
 }
 
-int	get_dimension(int *w, int *h, char **grid)
-{
-	if (!grid || !grid[0])
-		return (EXIT_FAILURE);
-	*w = ft_strlen(grid[0]);
-	*h = 0;
-	while (grid[*h])
-		(*h)++;
-	*w *= TILE_SIZE;
-	*h *= TILE_SIZE;
-	return (EXIT_SUCCESS);
-}
-
 bool    is_has_wall(double x, double y, char **grid, t_game *g)
 {
     int new_x;
@@ -86,9 +73,8 @@ bool    is_has_wall(double x, double y, char **grid, t_game *g)
 	int	mini_map_width;
 	int	mini_map_height;
 
-	if (get_dimension(&mini_map_width, &mini_map_height, grid))
-		cleanupAndExit("get_dimension", "failed!", g);
-
+	mini_map_height = g->g_conf.map.dim.height;
+	mini_map_width = g->g_conf.map.dim.width;
 	if (x < 0 || x >= mini_map_width || y < 0 || y >= mini_map_height)
         return true;
     new_x = floor(x / TILE_SIZE);
