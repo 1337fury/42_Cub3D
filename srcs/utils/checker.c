@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 16:55:12 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/31 12:41:10 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/06 09:41:20 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,26 +67,29 @@ int check_two(t_config *conf, t_gc *gc)
     return (EXIT_SUCCESS);
 }
 
-int check_three(t_config *conf)
+int check_three(t_game *g)
 {
-    char    **map;
-    int     i;
-    int     j;
-    int     nbr;
+    char			**map;
+    int				i;
+    int				j;
+    static int		nbr;
 
-    if (!conf)
+    if (!g || !g->g_conf.map.grid)
         return (_perror("check_three", "Data!"), 1);
-    map = conf->map.grid;
+    map = g->g_conf.map.grid;
     if (!map)
-        return (_perror("check_two", "Map!"), 1);
+        return (_perror("check_three", "Map!"), 1);
     i = -1;
-    nbr = 0;
     while (map[++i])
     {
         j = -1;
         while(map[i][++j])
             if (ft_strchr("NSEW", map[i][j]))
+			{
+				g->player.y = i * TILE_SIZE;
+                g->player.x = j * TILE_SIZE;
                 nbr++;
+			}
     }
     if (nbr > 1)
         return (_perror("map", "Multiple player start positions"), 1);
