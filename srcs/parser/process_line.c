@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 00:23:48 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/05 22:03:32 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/07 13:04:01 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void    _map_(char *line, t_map *map, t_data *data, t_gc *gc)
         map->order = data->order;
 }
 
-int _scan_line(char *line, t_config *config, t_gc *gc)
+int	_scan_line(char *line, t_config *config, t_gc *gc)
 {
     t_data      data;
     static int  order;
