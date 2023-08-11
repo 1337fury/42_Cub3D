@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/06 09:42:53 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:52:10 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,11 @@ int key_press(void *param)
     game = (t_game *)param;
     if (!game)
         return (EXIT_FAILURE);
-    if (mlx_is_key_down(game->mlx, MLX_KEY_UP))
+	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
+		cleanupAndExit("cub3D", "Thanks for playing! Goodbye.", game);
+    if (mlx_is_key_down(game->mlx, MLX_KEY_W))
         game->player.walk_dir = 1;
-    else if (mlx_is_key_down(game->mlx, MLX_KEY_DOWN))
+    else if (mlx_is_key_down(game->mlx, MLX_KEY_S))
         game->player.walk_dir = -1;
     else
         game->player.walk_dir = 0;
@@ -166,63 +168,75 @@ int	clear_image(t_game *g)
 	return (EXIT_SUCCESS);
 }
 
+void	start_draw_wall(t_game *g, t_var *inf)
+{
+	int	distanceFromTop;
+		
+	for (int y = inf->wall_top_pixel; y < inf->wall_bottom_pixel; y++)
+	{
+		distanceFromTop = y - (HEIGHT / 2) + (inf->wall_strip_h / 2);
+		inf->tex_offset_y = (distanceFromTop * TEXTURE_HEIGHT) / inf->wall_strip_h;
+		// Make sure inf->tex_offset_y is within the texture height range
+		inf->tex_offset_y = inf->tex_offset_y < 0 ? 0 : (inf->tex_offset_y >= TEXTURE_HEIGHT ? TEXTURE_HEIGHT - 1 : inf->tex_offset_y);
+		// set the color of the wall based on the color from the texture
+		uint32_t texelColor = inf->buffer[(TEXTURE_WIDTH * inf->tex_offset_y) + inf->tex_offset_x];
+		mlx_put_pixel(g->image, inf->i, y, texelColor);
+	}
+}
+
+void	calculate_wall_end_start(t_var *inf)
+{
+	inf->wall_top_pixel = (HEIGHT / 2) - (inf->wall_strip_h / 2);
+	if (inf->wall_top_pixel < 0)
+		inf->wall_top_pixel = 0;
+    inf->wall_bottom_pixel = (HEIGHT / 2) + (inf->wall_strip_h / 2);
+	if (inf->wall_bottom_pixel > HEIGHT)
+		inf->wall_bottom_pixel = HEIGHT;
+}
+
+void	which_texture(t_game *g, t_ray *ray, t_var *inf)
+{
+	if (ray->was_hit_vertical)
+	{
+		inf->tex_offset_x = (int)(ray->wall_hit_y) % TEXTURE_WIDTH;
+		if (ray->ray_angle > (0.5 * M_PI) && ray->ray_angle < (1.5 * M_PI))
+			inf->buffer = g->g_tex.n_buffer;
+		else
+			inf->buffer = g->g_tex.s_buffer;
+	}
+	else
+	{
+		inf->tex_offset_x = (int)(ray->wall_hit_x) % TEXTURE_WIDTH;
+		if ((ray->ray_angle > 0 && ray->ray_angle < M_PI) || ray->ray_angle >= 2 * M_PI)
+			inf->buffer = g->g_tex.e_buffer;
+		else
+			inf->buffer = g->g_tex.w_buffer;
+	}
+}
+
 int render3d_projection_walls(t_game *g)
 {
-    t_ray* ray;
-    int i;
-    float dis_proj_plane;
-    float wall_strip_h;
+    t_ray*	ray;
+	t_var	inf;
 
     if (!g)
         return (EXIT_FAILURE);
-
-    i = 0;
-    while (i < NUM_RAYS)
+    inf.i = 0;
+    while (inf.i < NUM_RAYS)
     {
-        ray = &g->rays[i];
+        ray = &g->rays[inf.i];
         if (!ray)
             return (EXIT_FAILURE);
-
-        dis_proj_plane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
-
+        inf.dis_proj_plane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
         // Fix the fisheye effect by correctly finding the distance
-        float correctWallDistance = ray->distance * cos(ray->ray_angle - g->player.rot_angle);
-
+        inf.correctWallDistance = ray->distance * cos(ray->ray_angle - g->player.rot_angle);
         // Use this corrected distance to find the height of the wall strip
-        wall_strip_h = (TILE_SIZE / correctWallDistance) * dis_proj_plane;
-
-        // [START WORKING WITH TEXTURES]
-        int wall_top_pixel = (HEIGHT / 2) - (wall_strip_h / 2);
-        wall_top_pixel = wall_top_pixel < 0 ? 0 : wall_top_pixel;
-
-        int wall_bottom_pixel = (HEIGHT / 2) + (wall_strip_h / 2);
-        wall_bottom_pixel = wall_bottom_pixel > HEIGHT ? HEIGHT : wall_bottom_pixel;
-
-        int tex_offset_x;
-        if (ray->was_hit_vertical)
-            tex_offset_x = (int)(ray->wall_hit_y) % TEXTURE_WIDTH;
-        else
-            tex_offset_x = (int)(ray->wall_hit_x) % TEXTURE_WIDTH;
-
-
-        for (int y = wall_top_pixel; y < wall_bottom_pixel; y++)
-        {
-            int distanceFromTop = y - (HEIGHT / 2) + (wall_strip_h / 2);
-            int tex_offset_y = (distanceFromTop * TEXTURE_HEIGHT) / wall_strip_h;
-
-            // Make sure tex_offset_y is within the texture height range
-            tex_offset_y = tex_offset_y < 0 ? 0 : (tex_offset_y >= TEXTURE_HEIGHT ? TEXTURE_HEIGHT - 1 : tex_offset_y);
-
-            // set the color of the wall based on the color from the texture
-            uint32_t texelColor = g->g_tex.s_buffer[(TEXTURE_WIDTH * tex_offset_y) + tex_offset_x];
-            mlx_put_pixel(g->image, i, y, texelColor);
-        }
-
-        // [END WORKING WITH TEXTURES]
-
-        i++;
+        inf.wall_strip_h = (TILE_SIZE / inf.correctWallDistance) * inf.dis_proj_plane;
+		calculate_wall_end_start(&inf);
+		which_texture(g, ray, &inf);
+		start_draw_wall(g, &inf);
+        inf.i++;
     }
-
     return (EXIT_SUCCESS);
 }
 
@@ -290,6 +304,6 @@ int game_engine(t_game *game)
 		return (EXIT_FAILURE);
     if (!mlx_loop_hook(game->mlx, (void *)game_spirit, game))
         return (_perror("mlx loop hook", "failed"), 1);
-	// mlx_cursor_hook(game->mlx, rotate_by_mouse, game);
+	mlx_cursor_hook(game->mlx, rotate_by_mouse, game);
     return (EXIT_SUCCESS);
 }
