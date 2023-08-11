@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/05 22:53:47 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/11 09:49:01 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,17 +157,18 @@ typedef struct s_game
 	t_game_tex	g_tex;
 }	t_game;
 
-typedef struct s_point
+typedef struct s_var
 {
-    int x;
-    int y;
-}	t_point;
-
-typedef struct s_rectangle
-{
-    t_point top_left;
-    t_point bottom_right;
-}	t_rectangle;
+	int		i;
+    float	dis_proj_plane;
+    float	wall_strip_h;
+	float	correctWallDistance;
+	int		wall_top_pixel;
+	int		wall_bottom_pixel;
+	int		tex_offset_x;
+	int		tex_offset_y;
+	size_t	*buffer;
+}	t_var;
 
 int     _parser(char *file_path, t_config *config, t_gc *gc);
 int		parse_file(char *file_path, t_config *config);
