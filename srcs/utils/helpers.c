@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 22:18:08 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/06 10:00:07 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/07 09:38:32 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ void cleanupAndExit(char *error, char *details, t_game *g)
 {
     _perror(error, details);
     gc_purifying(&g->gc);
+	if (!ft_strncmp(error, "cub3D", ft_strlen(error)))
+		exit(0);
     exit(1);
 }
 
