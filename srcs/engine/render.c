@@ -18,127 +18,126 @@ float	distance_bet_points(float x1, float y1, float x2, float y2)
 	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
 
+typedef struct s_coor
+{
+	float		xintercept;
+	float		yintercept;
+	float		xstep;
+	float		ystep;
+}	t_coor;
+
+typedef struct s_next_touch
+{
+	float	next_touch_x;
+	float	next_touch_y;
+}	t_next_touch;
+
+t_next_touch	ver_inter(t_coor *coor, t_player *p, t_ray *rays, int id)
+{
+	t_next_touch	points;
+
+	// Find the x-coordinate of the closest vertical grid intersenction
+	coor->xintercept = floor(p->x / TILE_SIZE) * TILE_SIZE;
+	if (rays[id].is_ray_facing_right)
+		coor->xintercept += TILE_SIZE;
+	// Find the y-coordinate of the closest vertical grid intersection
+	coor->yintercept = p->y + ((coor->xintercept - p->x) * tan(rays[id].ray_angle));
+	// Calculate the increment xstep and ystep
+	coor->xstep = TILE_SIZE;
+	if (rays[id].is_ray_facing_left)
+		coor->xstep *= -1;
+	coor->ystep = TILE_SIZE * tan(rays[id].ray_angle);
+	if (coor->ystep > 0 && rays[id].is_ray_facing_up)
+		coor->ystep *= -1;
+	if (coor->ystep < 0 && rays[id].is_ray_facing_down)
+		coor->ystep *= -1;
+	points.next_touch_x = coor->xintercept;
+	points.next_touch_y = coor->yintercept;
+	return (points);
+}
+
+t_next_touch	horz_inter(t_coor *coor, t_player *p, t_ray *rays, int id)
+{
+	t_next_touch	points;
+
+	// Find the y-coordinate of the closest horizontal grid intersenction
+	coor->yintercept = floor(p->y / TILE_SIZE) * TILE_SIZE;
+	if (rays[id].is_ray_facing_down)
+		coor->yintercept += TILE_SIZE;
+	// Find the x-coordinate of the closest horizontal grid intersection
+	coor->xintercept =  p->x + (coor->yintercept - p->y) / tan(rays[id].ray_angle);
+	// Calculate the increment xstep and ystep
+	coor->ystep = TILE_SIZE;
+	if (rays[id].is_ray_facing_up)
+		coor->ystep *= -1;
+	coor->xstep = TILE_SIZE / tan(rays[id].ray_angle);
+	if (coor->xstep > 0 && rays[id].is_ray_facing_left)
+		coor->xstep *= -1;
+	if (coor->xstep < 0 && rays[id].is_ray_facing_right)
+		coor->xstep *= -1;
+	points.next_touch_x = coor->xintercept;
+	points.next_touch_y = coor->yintercept;
+	return (points);
+}
+
 void	cast(int coloumn_id, t_game *g)
 {
 	t_player	*p = &g->player;
 	t_ray		*rays = g->rays;
 	t_map		*map = &g->g_conf.map;
-
+	t_next_touch ver;
+	t_next_touch horz;
+	t_coor	coor;
 	///////////////////////////////////////////
     // VERTICAL RAY-GRID INTERSECTION CODE
     ///////////////////////////////////////////
-
-	float		xintercept;
-	float		yintercept;
-	float		xstep;
-	float		ystep;
-
 	bool	found_ver_wall_hit = false;
 	float	ver_wall_hit_x = 0;
 	float	ver_wall_hit_y = 0;
 
-	// Find the x-coordinate of the closest vertical grid intersenction
-	xintercept = floor(p->x / TILE_SIZE) * TILE_SIZE;
-	if (rays[coloumn_id].is_ray_facing_right)
-		xintercept += TILE_SIZE;
-
-	// Find the y-coordinate of the closest vertical grid intersection
-	yintercept = p->y + ((xintercept - p->x) * tan(rays[coloumn_id].ray_angle));
-
-	
-	// Calculate the increment xstep and ystep
-	xstep = TILE_SIZE;
-	if (rays[coloumn_id].is_ray_facing_left)
-		xstep *= -1;
-		
-	ystep = TILE_SIZE * tan(rays[coloumn_id].ray_angle);
-	if (ystep > 0 && rays[coloumn_id].is_ray_facing_up)
-		ystep *= -1;
-	if (ystep < 0 && rays[coloumn_id].is_ray_facing_down)
-		ystep *= -1;
-	
-	float	next_ver_touch_x = xintercept;
-	float	next_ver_touch_y = yintercept;
-
-	// if (rays[coloumn_id].is_ray_facing_left)
-	// 	next_ver_touch_x--;
-	while (next_ver_touch_x >= 0 && next_ver_touch_x <= WIDTH && next_ver_touch_y >= 0 && next_ver_touch_y <= HEIGHT)
+	ver = ver_inter(&coor, p, rays, coloumn_id);
+	while (ver.next_touch_x >= 0 && ver.next_touch_x <= WIDTH && ver.next_touch_y >= 0 && ver.next_touch_y <= HEIGHT)
 	{
-		if (map->has_wall(next_ver_touch_x - (rays[coloumn_id].is_ray_facing_left), next_ver_touch_y, map->grid, g))
+		if (map->has_wall(ver.next_touch_x - (rays[coloumn_id].is_ray_facing_left), ver.next_touch_y, map->grid, g))
 		{
 			found_ver_wall_hit = true;
-			ver_wall_hit_x = next_ver_touch_x;
-			ver_wall_hit_y = next_ver_touch_y;
-			// rays[coloumn_id].wall_hit_x = ver_wall_hit_x;
-			// rays[coloumn_id].wall_hit_y = ver_wall_hit_y;
-			// draw_line(g, p->x, p->y, ver_wall_hit_x, ver_wall_hit_y);
+			ver_wall_hit_x = ver.next_touch_x;
+			ver_wall_hit_y = ver.next_touch_y;
 			break ;
 		}
 		else
 		{
-			next_ver_touch_x += xstep;
-			next_ver_touch_y += ystep;
+			ver.next_touch_x += coor.xstep;
+			ver.next_touch_y += coor.ystep;
 		}
 	}
 
-
-	///////////////////////////////////////////
-    // HORIZONTAL RAY-GRID INTERSECTION CODE
+ 	  ///////////////////////////////////////////
+     // HORIZONTAL RAY-GRID INTERSECTION CODE //
     ///////////////////////////////////////////
-
 	bool	found_horz_wall_hit = false;
 	float	horz_wall_hit_x = 0;
 	float	horz_wall_hit_y = 0;
 
-	// Find the y-coordinate of the closest horizontal grid intersenction
-	yintercept = floor(p->y / TILE_SIZE) * TILE_SIZE;
-	if (rays[coloumn_id].is_ray_facing_down)
-		yintercept += TILE_SIZE;
-	
-	// Find the x-coordinate of the closest horizontal grid intersection
-	xintercept = (p->x + ((yintercept - p->y)) / tan(rays[coloumn_id].ray_angle));
-
-	// Calculate the increment xstep and ystep
-	ystep = TILE_SIZE;
-	if (rays[coloumn_id].is_ray_facing_up)
-		ystep *= -1;
-	
-	xstep = TILE_SIZE / tan(rays[coloumn_id].ray_angle);
-	if (xstep > 0 && rays[coloumn_id].is_ray_facing_left)
-		xstep *= -1;
-	if (xstep < 0 && rays[coloumn_id].is_ray_facing_right)
-		xstep *= -1;
-	
-	float		next_horz_touch_x = xintercept;
-	float		next_horz_touch_y = yintercept;
-	
-
-	// if (rays[coloumn_id].is_ray_facing_up)
-	// 	next_horz_touch_y--;
-
-	while (next_horz_touch_x >= 0 && next_horz_touch_x <= WIDTH && next_horz_touch_y >= 0 && next_horz_touch_y <= HEIGHT)
+	horz = horz_inter(&coor, p, rays, coloumn_id);
+	while (horz.next_touch_x >= 0 && horz.next_touch_x <= WIDTH && horz.next_touch_y >= 0 && horz.next_touch_y <= HEIGHT)
 	{
-		if (map->has_wall(next_horz_touch_x, next_horz_touch_y - (rays[coloumn_id].is_ray_facing_up), map->grid, g))
+		if (map->has_wall(horz.next_touch_x, horz.next_touch_y - (rays[coloumn_id].is_ray_facing_up), map->grid, g))
 		{
 			found_horz_wall_hit = true;
-			horz_wall_hit_x = next_horz_touch_x;
-			horz_wall_hit_y = next_horz_touch_y;
-			// draw_line(g, p->x, p->y, horz_wall_hit_x, horz_wall_hit_y);
+			horz_wall_hit_x = horz.next_touch_x;
+			horz_wall_hit_y = horz.next_touch_y;
 			break ;
 		}
 		else
 		{
-			next_horz_touch_x += xstep;
-			next_horz_touch_y += ystep;
+			horz.next_touch_x += coor.xstep;
+			horz.next_touch_y += coor.ystep;
 		}
 	}
-	
-
 	///////////////////////////////////////////////////////////////////////////
 	// // calculate both horz and ver distances and choose the smallest value/
 	/////////////////////////////////////////////////////////////////////////
-
-
 	float	horz_hit_distance;
 	if (found_horz_wall_hit)
 		horz_hit_distance = distance_bet_points(p->x, p->y, horz_wall_hit_x, horz_wall_hit_y);
