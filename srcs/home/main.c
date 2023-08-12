@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:45:03 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/05 22:54:12 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/12 10:47:17 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,6 @@ int main(int ac, char **av)
         return (EXIT_FAILURE);
     if (game_engine(&game))
         return (EXIT_FAILURE);
-    /*
-        -print grid
-     */
-    // for (int i = 0; config.map.grid[i]; i++)
-    //         printf("%s\n", config.map.grid[i]);
-    /*
-        -end print
-     */
     _game_loop(&game);
     return (EXIT_SUCCESS);
 }
