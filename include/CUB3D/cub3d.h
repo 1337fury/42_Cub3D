@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/11 09:49:01 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/11 19:38:42 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # define WALL_STRIP_WIDTH 	1
 # define NUM_RAYS 			WIDTH / WALL_STRIP_WIDTH
 
-#define USAGE "./cub3D <PATH>/map.cub"
+#define USAGE "./cub3D <PATH>/name.cub"
 #define MAP   "Invalid file extension"
 #define F_READ "Error reading or empty file"
 
@@ -70,7 +70,6 @@ typedef struct	s_player
 {
 	double		x;
 	double		y;
-	float		raduis;
 	int			turn_dir;
 	int			walk_dir;
 	double		rot_angle;
@@ -170,6 +169,49 @@ typedef struct s_var
 	size_t	*buffer;
 }	t_var;
 
+typedef struct s_coor
+{
+	float		xintercept;
+	float		yintercept;
+	float		xstep;
+	float		ystep;
+}	t_coor;
+
+typedef struct s_next_touch
+{
+	float	next_touch_x;
+	float	next_touch_y;
+}	t_next_touch;
+
+typedef struct s_hit_info
+{
+	bool	found_wall_hit;
+	float	wall_hit_x;
+	float	wall_hit_y;
+} t_hit_info;
+
+typedef struct s_all
+{
+	t_next_touch	ver;
+	t_next_touch	horz;
+	t_hit_info		ver_hit;
+	t_hit_info		horz_hit;
+	t_coor			coor;
+	float			horz_hit_distance;
+	float			ver_hit_distance;
+}	t_all;
+
+typedef struct s_line
+{
+	int		dx;
+	int		dy;
+	int		steps;
+	float	x_increment;
+	float	y_increment;
+	float	x;
+	float	y;
+}	t_line;
+
 int     _parser(char *file_path, t_config *config, t_gc *gc);
 int		parse_file(char *file_path, t_config *config);
 int		parse_texture(char *line, t_textures *textures);
@@ -202,7 +244,6 @@ int		game_engine(t_game *game);
 int		grid_render(t_game *game);
 int		player_render(t_game *game);
 void    _fill(t_game *g, int y, int x, unsigned int color);
-void	_circle(t_game *g, int x, int y, int r, int color);
 void	draw_line(t_game *g, int x0, int y0, int x1, int y1);
 bool    is_has_wall(double x, double y, char **grid, t_game *g);
 
