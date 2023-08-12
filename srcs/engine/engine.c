@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/10 19:52:10 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/11 20:04:46 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,16 +171,24 @@ int	clear_image(t_game *g)
 void	start_draw_wall(t_game *g, t_var *inf)
 {
 	int	distanceFromTop;
-		
-	for (int y = inf->wall_top_pixel; y < inf->wall_bottom_pixel; y++)
+	int	y;
+	uint32_t texelColor;
+	
+	y = inf->wall_top_pixel;
+	while (y < inf->wall_bottom_pixel)
 	{
 		distanceFromTop = y - (HEIGHT / 2) + (inf->wall_strip_h / 2);
 		inf->tex_offset_y = (distanceFromTop * TEXTURE_HEIGHT) / inf->wall_strip_h;
+		if (inf->tex_offset_y < 0)
+			inf->tex_offset_y = 0;
+		else if (inf->tex_offset_y >= TEXTURE_HEIGHT)
+			inf->tex_offset_y = TEXTURE_HEIGHT - 1;
 		// Make sure inf->tex_offset_y is within the texture height range
-		inf->tex_offset_y = inf->tex_offset_y < 0 ? 0 : (inf->tex_offset_y >= TEXTURE_HEIGHT ? TEXTURE_HEIGHT - 1 : inf->tex_offset_y);
+		// inf->tex_offset_y = inf->tex_offset_y < 0 ? 0 : (inf->tex_offset_y >= TEXTURE_HEIGHT ? TEXTURE_HEIGHT - 1 : inf->tex_offset_y);
 		// set the color of the wall based on the color from the texture
-		uint32_t texelColor = inf->buffer[(TEXTURE_WIDTH * inf->tex_offset_y) + inf->tex_offset_x];
+		texelColor = inf->buffer[(TEXTURE_WIDTH * inf->tex_offset_y) + inf->tex_offset_x];
 		mlx_put_pixel(g->image, inf->i, y, texelColor);
+		y++;
 	}
 }
 
