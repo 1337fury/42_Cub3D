@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:30:24 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/05 20:32:33 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/11 19:38:15 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,44 +32,35 @@ void    _fill(t_game *g, int y, int x, unsigned int color)
     }
 }
 
-void _circle(t_game *g, int x, int y, int r, int color)
-{
-    const double PI = 3.1415926535;
-    double i, angle, x1, y1;
-
-    i = 0;
-    while (i < 360)
-    {
-        angle = i;
-        x1 = r * cos(angle * PI / 180);
-        y1 = r * sin(angle * PI / 180);
-        mlx_put_pixel(g->image, x + x1, y + y1, color);
-        i += 0.1;
-    }
-}
-
 void	draw_line(t_game *g, int x0, int y0, int x1, int y1)
-{
-	int	dx = x1 - x0;
-	int	dy = y1 - y0;
-	int	steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-	float	xIncrement = (float)dx / (float)steps;
-	float	yIncrement = (float)dy / (float)steps;
-	float	x = x0;
-	float	y = y0;
+{	
+	t_line	l;
+	int		i;
 
-	for (int i = 0; i <= steps; i++)
+	l.dx = x1 - x0;
+	l.dy = y1 - y0;
+	if (abs(l.dx) > abs(l.dy))
+		l.steps = abs(l.dx);
+	else
+		l.steps = abs(l.dy);
+	l.x_increment = (float)l.dx / (float)l.steps;
+	l.y_increment = (float)l.dy / (float)l.steps;
+	l.x = x0;
+	l.y = y0;
+	i = 0;
+	while (i <= l.steps)
 	{
-        mlx_put_pixel(g->image, (float)x, (float)y, 0xff0000ff);
-		x += xIncrement;
-		y += yIncrement;
+        mlx_put_pixel(g->image, (float)l.x, (float)l.y, 0xff0000ff);
+		l.x += l.x_increment;
+		l.y += l.y_increment;
+		i++;
 	}
 }
 
-bool    is_has_wall(double x, double y, char **grid, t_game *g)
+bool	is_has_wall(double x, double y, char **grid, t_game *g)
 {
-    int new_x;
-    int new_y;
+    int	new_x;
+    int	new_y;
 	int	mini_map_width;
 	int	mini_map_height;
 
