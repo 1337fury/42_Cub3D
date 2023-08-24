@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/11 19:38:42 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/23 19:28:36 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@
 # define WIDTH 1650
 # define HEIGHT 700
 # define TILE_SIZE 15
-# define SCALE 0.2
 
 # define FOV_ANGLE 			60 * (M_PI / 180)
 # define WALL_STRIP_WIDTH 	1
