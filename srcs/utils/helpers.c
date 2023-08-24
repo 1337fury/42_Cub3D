@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 22:18:08 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/07 09:38:32 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/22 18:21:23 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void    fill(int **order, t_config *conf)
     (*order)[5] = conf->colors.ceiling.order;
 }
 
-void cleanupAndExit(char *error, char *details, t_game *g)
+void cleanupAndExit(char *error, char *details, t_game *g) // norminette
 {
     _perror(error, details);
     gc_purifying(&g->gc);
