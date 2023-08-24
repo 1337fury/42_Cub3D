@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/11 20:04:46 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/23 20:50:58 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	_init_buffers(t_game_tex *g_tex, t_gc *gc)
 	return (EXIT_SUCCESS);
 }
 
-int	fill_buffer(size_t *buffer, uint8_t* pix)
+int	fill_buffer(size_t *buffer, uint8_t *pix)
 {
 	unsigned long	i;
 	unsigned long	j;
@@ -108,8 +108,8 @@ int	rays_render(t_game *game)
 	int		i;
 
 	rays = game->rays;
-	 if (!game || !rays)
-        return (EXIT_FAILURE);
+	if (!game || !rays)
+		return (EXIT_FAILURE);
 	i = 0;
 	while (i < NUM_RAYS)
 	{
@@ -120,35 +120,64 @@ int	rays_render(t_game *game)
 	return (EXIT_SUCCESS);
 }
 
-int key_press(void *param)
-{
-    t_game   *game;
 
-    game = (t_game *)param;
-    if (!game)
-        return (EXIT_FAILURE);
+void	movePlayerSideways(t_player *p, t_map *map, t_game *game)
+{
+	double new_x;
+	double new_y;
+
+	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
+    {
+        new_x = p->x + cos(p->rot_angle + M_PI_2) * p->move_speed;
+        new_y = p->y + sin(p->rot_angle + M_PI_2) * p->move_speed;
+		if (!map->has_wall(new_x, new_y, map->grid, game))
+		{
+			p->x = new_x;
+			p->y = new_y;
+		}
+    }
+    else if (mlx_is_key_down(game->mlx, MLX_KEY_D))
+    {
+        new_x = p->x + cos(p->rot_angle - M_PI_2) * p->move_speed;
+        new_y = p->y + sin(p->rot_angle - M_PI_2) * p->move_speed;
+        if (!map->has_wall(new_x, new_y, map->grid, game))
+		{
+			p->x = new_x;
+			p->y = new_y;
+		}
+    }
+}
+
+int	key_press(void *param)
+{
+	t_game	*game;
+
+	game = (t_game *)param;
+	if (!game)
+		return (EXIT_FAILURE);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		cleanupAndExit("cub3D", "Thanks for playing! Goodbye.", game);
-    if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-        game->player.walk_dir = 1;
-    else if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-        game->player.walk_dir = -1;
-    else
-        game->player.walk_dir = 0;
-    if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-        game->player.turn_dir = 1;
-    else if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-        game->player.turn_dir = -1;
-    else
-        game->player.turn_dir = 0;
-    return (EXIT_SUCCESS);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
+		game->player.walk_dir = 1;
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_S))
+		game->player.walk_dir = -1;
+	else
+		game->player.walk_dir = 0;
+	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+		game->player.turn_dir = 1;
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
+		game->player.turn_dir = -1;
+	else
+		game->player.turn_dir = 0;
+	movePlayerSideways(&game->player, &game->g_conf.map, game);
+	return (EXIT_SUCCESS);
 }
 
 int	clear_image(t_game *g)
 {
 	int		i;
 	int		j;
-	
+
 	if (!g)
 		return (EXIT_FAILURE);
 	i = 0;
@@ -170,24 +199,23 @@ int	clear_image(t_game *g)
 
 void	start_draw_wall(t_game *g, t_var *inf)
 {
-	int	distanceFromTop;
-	int	y;
-	uint32_t texelColor;
-	
+	int			distance_from_top;
+	int			y;
+	uint32_t	texel_color;
+
 	y = inf->wall_top_pixel;
 	while (y < inf->wall_bottom_pixel)
 	{
-		distanceFromTop = y - (HEIGHT / 2) + (inf->wall_strip_h / 2);
-		inf->tex_offset_y = (distanceFromTop * TEXTURE_HEIGHT) / inf->wall_strip_h;
+		distance_from_top = y - (HEIGHT / 2) + (inf->wall_strip_h / 2);
+		inf->tex_offset_y = (distance_from_top * TEXTURE_HEIGHT)
+			/ inf->wall_strip_h;
 		if (inf->tex_offset_y < 0)
 			inf->tex_offset_y = 0;
 		else if (inf->tex_offset_y >= TEXTURE_HEIGHT)
 			inf->tex_offset_y = TEXTURE_HEIGHT - 1;
-		// Make sure inf->tex_offset_y is within the texture height range
-		// inf->tex_offset_y = inf->tex_offset_y < 0 ? 0 : (inf->tex_offset_y >= TEXTURE_HEIGHT ? TEXTURE_HEIGHT - 1 : inf->tex_offset_y);
-		// set the color of the wall based on the color from the texture
-		texelColor = inf->buffer[(TEXTURE_WIDTH * inf->tex_offset_y) + inf->tex_offset_x];
-		mlx_put_pixel(g->image, inf->i, y, texelColor);
+		texel_color = inf->buffer[(TEXTURE_WIDTH * inf->tex_offset_y)
+			+ inf->tex_offset_x];
+		mlx_put_pixel(g->image, inf->i, y, texel_color);
 		y++;
 	}
 }
@@ -197,7 +225,7 @@ void	calculate_wall_end_start(t_var *inf)
 	inf->wall_top_pixel = (HEIGHT / 2) - (inf->wall_strip_h / 2);
 	if (inf->wall_top_pixel < 0)
 		inf->wall_top_pixel = 0;
-    inf->wall_bottom_pixel = (HEIGHT / 2) + (inf->wall_strip_h / 2);
+	inf->wall_bottom_pixel = (HEIGHT / 2) + (inf->wall_strip_h / 2);
 	if (inf->wall_bottom_pixel > HEIGHT)
 		inf->wall_bottom_pixel = HEIGHT;
 }
@@ -215,63 +243,64 @@ void	which_texture(t_game *g, t_ray *ray, t_var *inf)
 	else
 	{
 		inf->tex_offset_x = (int)(ray->wall_hit_x) % TEXTURE_WIDTH;
-		if ((ray->ray_angle > 0 && ray->ray_angle < M_PI) || ray->ray_angle >= 2 * M_PI)
+		if ((ray->ray_angle > 0 && ray->ray_angle < M_PI)
+			|| ray->ray_angle >= 2 * M_PI)
 			inf->buffer = g->g_tex.e_buffer;
 		else
 			inf->buffer = g->g_tex.w_buffer;
 	}
 }
 
-int render3d_projection_walls(t_game *g)
+int	render3d_projection_walls(t_game *g) // norm
 {
-    t_ray*	ray;
+	t_ray	*ray;
 	t_var	inf;
 
-    if (!g)
-        return (EXIT_FAILURE);
-    inf.i = 0;
-    while (inf.i < NUM_RAYS)
-    {
-        ray = &g->rays[inf.i];
-        if (!ray)
-            return (EXIT_FAILURE);
-        inf.dis_proj_plane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
-        // Fix the fisheye effect by correctly finding the distance
-        inf.correctWallDistance = ray->distance * cos(ray->ray_angle - g->player.rot_angle);
-        // Use this corrected distance to find the height of the wall strip
-        inf.wall_strip_h = (TILE_SIZE / inf.correctWallDistance) * inf.dis_proj_plane;
+	if (!g)
+		return (EXIT_FAILURE);
+	inf.i = 0;
+	while (inf.i < NUM_RAYS)
+	{
+		ray = &g->rays[inf.i];
+		if (!ray)
+			return (EXIT_FAILURE);
+		inf.dis_proj_plane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
+		inf.correctWallDistance = ray->distance
+			* cos(ray->ray_angle - g->player.rot_angle);
+		inf.wall_strip_h = (TILE_SIZE / inf.correctWallDistance)
+			* inf.dis_proj_plane;
 		calculate_wall_end_start(&inf);
 		which_texture(g, ray, &inf);
 		start_draw_wall(g, &inf);
-        inf.i++;
-    }
-    return (EXIT_SUCCESS);
+		inf.i++;
+	}
+	return (EXIT_SUCCESS);
 }
 
 void	game_spirit(void *data)
 {
-    t_game  *game;
+	t_game	*game;
 
-    game = (t_game *)data;
+	game = (t_game *)data;
+	if (key_press(game))
+		cleanupAndExit("key press", "failed!", game);
 	if (clear_image(game))
 		cleanupAndExit("clear image", "failed!", game);
+	if (player_render(game))
+		cleanupAndExit("player render", "failed!", game);
+	if (cast_all_rays(game))
+		cleanupAndExit("Ray caster", "failed!", game);
 	if (render3d_projection_walls(game))
 		cleanupAndExit("3D projection", "failed!", game);
 	if (grid_render(game))
 		cleanupAndExit("grid render", "failed!", game);
-    if (player_render(game))
-        cleanupAndExit("player render", "failed!", game);
-	if (cast_all_rays(game))
-		cleanupAndExit("Ray caster", "failed!", game);
 	if (rays_render(game))
 		cleanupAndExit("rays render", "failed!", game);
-    if (key_press(game))
-        cleanupAndExit("key press", "failed!", game);
 }
 
-void rotate_by_mouse(double xpos, double ypos, void* param)
+void	rotate_by_mouse(double xpos, double ypos, void* param) //norm
 {
-	t_game* game;
+	t_game	*game;
 
 	(void)ypos;
 	game = (t_game *)param;
@@ -287,21 +316,20 @@ int	before_start(t_game *g)
 
 	p = &g->player;
 	tex = &g->g_conf.textures;
-
 	if (!p || !tex)
 		return (EXIT_FAILURE);
 	if (p->x == -1 || p->y == -1)
 		return (_perror("Error", "Player not added to map"), 1);
 	if (tex->east.order == -1 || tex->north.order == -1
 		|| tex->south.order == -1 || tex->west.order == -1)
-			return (_perror("Error", "Missing texture"), 1);
+		return (_perror("Error", "Missing texture"), 1);
 	return (EXIT_SUCCESS);
 }
 
-int game_engine(t_game *game)
+int	game_engine(t_game *game)
 {
-    if (!game)
-        return (EXIT_FAILURE);
+	if (!game)
+		return (EXIT_FAILURE);
 	if (get_colors(&game->g_conf.colors, &game->g_conf.hex_colors))
 		return (EXIT_FAILURE);
 	if (get_game_textures(game))
@@ -310,8 +338,8 @@ int game_engine(t_game *game)
 		return (EXIT_FAILURE);
 	if (before_start(game))
 		return (EXIT_FAILURE);
-    if (!mlx_loop_hook(game->mlx, (void *)game_spirit, game))
-        return (_perror("mlx loop hook", "failed"), 1);
+	if (!mlx_loop_hook(game->mlx, (void *)game_spirit, game))
+		return (_perror("mlx loop hook", "failed"), 1);
 	mlx_cursor_hook(game->mlx, rotate_by_mouse, game);
-    return (EXIT_SUCCESS);
+	return (EXIT_SUCCESS);
 }
