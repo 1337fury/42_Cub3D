@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 16:55:12 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 11:55:32 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:32:26 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	check_extension(char *ext)
 
 int	check_one(t_config *conf, t_gc *gc)
 {
-	int *order;
-	int max;
+	int	*order;
+	int	max;
 
 	if (!conf)
 		return (_perror("check_one", "Data!"), 1);
@@ -40,18 +40,19 @@ int	check_one(t_config *conf, t_gc *gc)
 	if (max == -1)
 		return (_perror("conf file", "there is a missing element!"), 1);
 	if (conf->map.order < max)
-		return(_perror("conf file", "Invalid structure or order of elements"), 1);
+		return (_perror("conf file",
+				"Invalid structure or order of elements"), 1);
 	return (EXIT_SUCCESS);
 }
 
-int check_two(t_config *conf, t_gc *gc)
+int	check_two(t_config *conf, t_gc *gc)
 {
-	char    **map;
-	int     i;
-	int     j;
+	char	**map;
+	int		i;
+	int		j;
 
 	if (!conf)
-		 return (_perror("check_two", "Data!"), 1);
+		return (_perror("check_two", "Data!"), 1);
 	map = conf->map.grid;
 	if (!map)
 		return (_perror("check_two", "Map!"), 1);
@@ -59,15 +60,16 @@ int check_two(t_config *conf, t_gc *gc)
 	while (map[++i])
 	{
 		j = -1;
-		while(map[i][++j])
+		while (map[i][++j])
 			if (!ft_strchr("01NSEW ", map[i][j]))
 				return (_perror("map", gc_strainer(gc, \
-					ft_strjoin("unexpected element : `", to_str(map[i][j], gc)))), 1);
+					ft_strjoin("unexpected element : `", \
+						to_str(map[i][j], gc)))), 1);
 	}
 	return (EXIT_SUCCESS);
 }
 
-int check_three(t_game *g)
+int	check_three(t_game *g)
 {
 	char			**map;
 	int				i;
@@ -77,29 +79,29 @@ int check_three(t_game *g)
 	if (!g || !g->g_conf.map.grid)
 		return (_perror("check_three", "Data!"), 1);
 	map = g->g_conf.map.grid;
-	if (!map)
-		return (_perror("check_three", "Map!"), 1);
 	i = -1;
 	while (map[++i])
 	{
 		j = -1;
-		while(map[i][++j])
+		while (map[i][++j])
+		{
 			if (ft_strchr("NSEW", map[i][j]))
 			{
 				g->player.y = i * TILE_SIZE;
 				g->player.x = j * TILE_SIZE;
 				nbr++;
 			}
+		}
 	}
 	if (nbr > 1)
 		return (_perror("map", "Multiple player start positions"), 1);
 	return (EXIT_SUCCESS);
 }
 
-int check_four(t_config *conf)
+int	check_four(t_config *conf)
 {
-	char    *f_map;
-	int     i;
+	char	*f_map;
+	int		i;
 
 	if (!conf)
 		return (_perror("check_four", "Data!"), 1);

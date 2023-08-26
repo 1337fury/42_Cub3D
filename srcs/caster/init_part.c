@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:33:19 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 12:34:38 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:42:59 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	init_ray(t_ray *ray, float angle)
 	ray->was_hit_vertical = false;
 	ray->is_ray_facing_down = ray->ray_angle > 0 && ray->ray_angle < M_PI;
 	ray->is_ray_facing_up = !ray->is_ray_facing_down;
-	ray->is_ray_facing_right = ray->ray_angle < 0.5 * M_PI || ray->ray_angle > 1.5 * M_PI;
+	ray->is_ray_facing_right = ray->ray_angle < 0.5 * M_PI || \
+		ray->ray_angle > 1.5 * M_PI;
 	ray->is_ray_facing_left = !ray->is_ray_facing_right;
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 12:16:37 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:56:14 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,16 @@ void	render(t_game *game, int inx)
 {
 	t_player	*p;
 	t_ray		*ray;
+	t_point		one;
+	t_point		two;
 
 	p = &game->player;
 	ray = &game->rays[inx];
-	draw_line(game, p->x, p->y, ray->wall_hit_x, ray->wall_hit_y);
+	one.x = p->x;
+	one.y = p->y;
+	two.x = ray->wall_hit_x;
+	two.y = ray->wall_hit_y;
+	draw_line(game, &one, &two);
 }
 
 int	rays_render(t_game *game)
@@ -46,19 +52,19 @@ void	game_spirit(void *data)
 
 	game = (t_game *)data;
 	if (key_press(game))
-		cleanupAndExit("key press", "failed!", game);
+		cleanup_and_exit("key press", "failed!", game);
 	if (clear_image(game))
-		cleanupAndExit("clear image", "failed!", game);
+		cleanup_and_exit("clear image", "failed!", game);
 	if (player_render(game))
-		cleanupAndExit("player render", "failed!", game);
+		cleanup_and_exit("player render", "failed!", game);
 	if (cast_all_rays(game))
-		cleanupAndExit("Ray caster", "failed!", game);
+		cleanup_and_exit("Ray caster", "failed!", game);
 	if (render3d_projection_walls(game))
-		cleanupAndExit("3D projection", "failed!", game);
+		cleanup_and_exit("3D projection", "failed!", game);
 	if (grid_render(game))
-		cleanupAndExit("grid render", "failed!", game);
+		cleanup_and_exit("grid render", "failed!", game);
 	if (rays_render(game))
-		cleanupAndExit("rays render", "failed!", game);
+		cleanup_and_exit("rays render", "failed!", game);
 }
 
 int	before_start(t_game *g)

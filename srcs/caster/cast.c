@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:20:02 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 12:33:36 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:42:43 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,21 +43,21 @@ void	cast(int id, t_game *g)
 
 int	cast_all_rays(t_game *game)
 {
-    float	ray_angle;
-    int		i;
+	float	ray_angle;
+	int		i;
 
 	if (!game)
 		return (EXIT_FAILURE);
 	ray_angle = game->player.rot_angle - (FOV_ANGLE / 2);
-    i = 0;
-    while (i < NUM_RAYS)
-    {
+	i = 0;
+	while (i < NUM_RAYS)
+	{
 		if (init_ray(&game->rays[i], normalize(&ray_angle)))
 			return (EXIT_FAILURE);
 		game->rays[i].cast = cast;
-        game->rays[i].cast(i, game);
-        ray_angle +=  FOV_ANGLE / NUM_RAYS;
+		game->rays[i].cast(i, game);
+		ray_angle += FOV_ANGLE / NUM_RAYS;
 		i++;
-    }
+	}
 	return (EXIT_SUCCESS);
 }

@@ -6,13 +6,13 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 12:38:11 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/07/27 12:48:29 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:49:21 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	_2D_length(char **tab)
+int	_2d_length(char **tab)
 {
 	int	i;
 

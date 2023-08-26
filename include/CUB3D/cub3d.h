@@ -6,24 +6,24 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 12:36:21 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 14:15:50 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
-#define CUB3D_H
+# define CUB3D_H
 
-#include "MLX42.h"
-#include "libft.h"
-#include "ft_printf.h"
-#include "get_next_line.h"
-#include "gc_memory.h"
 #include <math.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
 #include <float.h>
+#include "MLX42.h"
+#include "libft.h"
+#include "ft_printf.h"
+#include "get_next_line.h"
+#include "gc_memory.h"
 
 # define NUM_TEXTURES 4
 # define TEXTURE_WIDTH 15
@@ -49,6 +49,13 @@ typedef int (*_update)(void *);
 typedef bool (*_has_wall)(double, double, char **, struct s_game*);
 typedef void (*_cast)(int, struct s_game*);
 typedef void (*_render)(struct s_game*, int);
+
+typedef	struct s_point
+{
+	int x;
+	int y;
+}	t_point;
+
 
 typedef struct s_ray
 {
@@ -212,13 +219,8 @@ typedef struct s_line
 }	t_line;
 
 int     		_parser(char *file_path, t_config *config, t_gc *gc);
-int				parse_file(char *file_path, t_config *config);
-int				parse_texture(char *line, t_textures *textures);
-int				parse_color(char *line, t_colors *colors);
-int				parse_map(char *line, t_map *map);
 
 int				read_file(int fd, char **file_content, t_gc *gc);
-int				validate_map(t_map *map);
 
 void    		_perror(char *type, char *msg);
 int     		check_extension(char *ext);
@@ -226,8 +228,7 @@ int     		check_extension(char *ext);
 char    		*to_str(char c, t_gc *gc);
 void    		fill(int **order, t_config *conf);
 char    		_next(char *map, int i);
-void			cleanupAndExit(char *error, char *details, t_game *game);
-int				get_colors(t_colors *colors, t_hex *hex);
+void			cleanup_and_exit(char *error, char *details, t_game *game);
 void			*_memory(size_t count, size_t size, t_gc *gc);
 
 int				 _init_all(t_gc **gc, t_config *config, t_game *game);
@@ -243,7 +244,7 @@ int				game_engine(t_game *game);
 int				grid_render(t_game *game);
 int				player_render(t_game *game);
 void    		_fill(t_game *g, int y, int x, unsigned int color);
-void			draw_line(t_game *g, int x0, int y0, int x1, int y1);
+void			draw_line(t_game *g, t_point *one, t_point *two);
 bool    		is_has_wall(double x, double y, char **grid, t_game *g);
 int				clear_image(t_game *g);
 
@@ -273,12 +274,17 @@ t_next_touch	horz_inter(t_coor *coor, t_player *p, t_ray *rays, int id);
 void			ver_ray_grid_inter(t_game *g, t_all *all, int id);
 void			horz_ray_grid_inter(t_game *g, t_all *all, int id);
 
-
-//
-int		cast_all_rays(t_game *game);
-
-void    _game_loop(t_game *game);
-
+int				get_colors(t_colors *colors, t_hex *hex);
+int				to_decimal(char **rgb, int *rgba);
+int				is_valid(int c_value);
 unsigned int	rgba_to_hex(int r, int g, int b, int tr);
+
+char			_next(char *map, int i);
+char			*to_str(char c, t_gc *gc);
+void			fill(int **order, t_config *conf);
+void			cleanup_and_exit(char *error, char *details, t_game *g);
+void			*_memory(size_t count, size_t size, t_gc *gc);
+
+void    		_game_loop(t_game *game);
 
 #endif

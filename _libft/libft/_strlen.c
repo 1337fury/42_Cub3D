@@ -6,16 +6,16 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 19:29:37 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/15 19:32:24 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:48:14 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int _strlen(char *s, char c)
+int	_strlen(char *s, char c)
 {
-    int l;
+	int	l;
 
-    l = 0;
-    while (s[l] && s[l] != c)
-        l++;
-    return (l);
+	l = 0;
+	while (s[l] && s[l] != c)
+		l++;
+	return (l);
 }

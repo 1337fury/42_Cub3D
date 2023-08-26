@@ -15,7 +15,7 @@ HSL			= main.c _init.c
 #PARSER SRCS LIST
 PSL			= parser.c process_line.c
 #UTILS SRCS LIST
-USL			= checker.c errors.c helpers.c
+USL			= checker.c errors.c helpers.c other.c
 #ENGINE SRCS LIST
 ESL			= engine.c render.c render_utils.c textures.c input.c _3D_projection.c
 #CASTER SRCS LIST

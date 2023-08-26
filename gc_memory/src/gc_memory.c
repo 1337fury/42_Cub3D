@@ -6,11 +6,11 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 17:58:45 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/06/15 18:16:34 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 14:19:40 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "gc_memory.h"
+#include "gc_memory.h"
 
 t_gc	*gc_init(void)
 {

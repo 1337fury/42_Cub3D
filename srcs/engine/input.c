@@ -6,37 +6,37 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:01:38 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 12:04:47 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:24:07 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	movePlayerSideways(t_player *p, t_map *map, t_game *game)
+void	move_player_sideways(t_player *p, t_map *map, t_game *game)
 {
-	double new_x;
-	double new_y;
+	double	new_x;
+	double	new_y;
 
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-    {
-        new_x = p->x + cos(p->rot_angle + M_PI_2) * p->move_speed;
-        new_y = p->y + sin(p->rot_angle + M_PI_2) * p->move_speed;
+	{
+		new_x = p->x + cos(p->rot_angle + M_PI_2) * p->move_speed;
+		new_y = p->y + sin(p->rot_angle + M_PI_2) * p->move_speed;
 		if (!map->has_wall(new_x, new_y, map->grid, game))
 		{
 			p->x = new_x;
 			p->y = new_y;
 		}
-    }
-    else if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-    {
-        new_x = p->x + cos(p->rot_angle - M_PI_2) * p->move_speed;
-        new_y = p->y + sin(p->rot_angle - M_PI_2) * p->move_speed;
-        if (!map->has_wall(new_x, new_y, map->grid, game))
+	}
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_D))
+	{
+		new_x = p->x + cos(p->rot_angle - M_PI_2) * p->move_speed;
+		new_y = p->y + sin(p->rot_angle - M_PI_2) * p->move_speed;
+		if (!map->has_wall(new_x, new_y, map->grid, game))
 		{
 			p->x = new_x;
 			p->y = new_y;
 		}
-    }
+	}
 }
 
 int	key_press(void *param)
@@ -47,7 +47,7 @@ int	key_press(void *param)
 	if (!game)
 		return (EXIT_FAILURE);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
-		cleanupAndExit("cub3D", "Thanks for playing! Goodbye.", game);
+		cleanup_and_exit("cub3D", "Thanks for playing! Goodbye.", game);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
 		game->player.walk_dir = 1;
 	else if (mlx_is_key_down(game->mlx, MLX_KEY_S))
@@ -60,11 +60,11 @@ int	key_press(void *param)
 		game->player.turn_dir = -1;
 	else
 		game->player.turn_dir = 0;
-	movePlayerSideways(&game->player, &game->g_conf.map, game);
+	move_player_sideways(&game->player, &game->g_conf.map, game);
 	return (EXIT_SUCCESS);
 }
 
-void	rotate_by_mouse(double xpos, double ypos, void* param)
+void	rotate_by_mouse(double xpos, double ypos, void *param)
 {
 	t_game	*game;
 

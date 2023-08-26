@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:13:14 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 12:14:43 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:43:19 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	which_texture(t_game *g, t_ray *ray, t_var *inf)
 	}
 }
 
-int	render3d_projection_walls(t_game *g) 
+int	render3d_projection_walls(t_game *g)
 {
 	t_ray	*ray;
 	t_var	inf;
