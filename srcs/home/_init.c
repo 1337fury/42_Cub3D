@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 00:31:26 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 13:28:45 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 18:35:24 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	_init_all(t_gc **gc, t_config *config, t_game *game)
 	if (image_init(game) || _init_player(&game->player))
 		return (EXIT_FAILURE);
 	game->gc = *gc;
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	start_check(t_game *g, t_config *config)
@@ -83,6 +83,8 @@ int	start_check(t_game *g, t_config *config)
 	if (check_three(g))
 		return (EXIT_FAILURE);
 	if (check_four(&g->g_conf))
+		return (EXIT_FAILURE);
+	if (is_surrounded(&g->g_conf))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

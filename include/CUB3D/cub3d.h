@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 14:15:50 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 18:16:39 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,7 @@ int 			check_one(t_config *conf, t_gc *gc);
 int 			check_two(t_config *conf, t_gc *gc);
 int				check_three(t_game *game);
 int				check_four(t_config *conf);
+int				is_surrounded(t_config *c);
 
 int				game_engine(t_game *game);
 int				grid_render(t_game *game);
@@ -258,7 +259,7 @@ void			calculate_wall_end_start(t_var *inf);
 void			which_texture(t_game *g, t_ray *ray, t_var *inf);
 int				render3d_projection_walls(t_game *g);
 
-void			movePlayerSideways(t_player *p, t_map *map, t_game *game);
+void			move_player_sideways(t_player *p, t_map *map, t_game *game);
 int				key_press(void *param);
 void			rotate_by_mouse(double xpos, double ypos, void* param);
 
