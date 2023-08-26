@@ -17,7 +17,9 @@ PSL			= parser.c process_line.c
 #UTILS SRCS LIST
 USL			= checker.c errors.c helpers.c
 #ENGINE SRCS LIST
-ESL			= engine.c render.c render_utils.c
+ESL			= engine.c render.c render_utils.c textures.c input.c _3D_projection.c
+#CASTER SRCS LIST
+CSL 		= cast.c intersenctions.c init_part.c calculation.c
 
 #PARSER SRCS PATH
 PSP			= $(addprefix srcs/parser/,$(PSL))
@@ -27,12 +29,14 @@ HSP			= $(addprefix srcs/home/,$(HSL))
 USP			= $(addprefix srcs/utils/,$(USL))
 #ENGINE SRCS PATH
 ESP			= $(addprefix srcs/engine/,$(ESL))
+#CASTER SRCS PATH
+CSP 		= $(addprefix srcs/caster/,$(CSL))
 
 #SOURCES LIST WITHOUT PATH
-SL			= $(PSL) $(HSL) $(USL) $(ESL)
+SL			= $(PSL) $(HSL) $(USL) $(ESL) $(CSL)
 
 #SOURCES WITH PATH
-SRCS		= $(PSP) $(HSP) $(USP) $(ESP)
+SRCS		= $(PSP) $(HSP) $(USP) $(ESP) $(CSP)
 
 
 #Object
@@ -81,6 +85,11 @@ $(O_DIR)%.o : srcs/utils/%.c
 	@echo "Compiling $(GREEN)$@"
 
 $(O_DIR)%.o : srcs/engine/%.c
+	@tput cuu1
+	@$(CC) $(FLAGS) $(INC) -c $< -o $@
+	echo "Compiling $(GREEN)$@"
+
+$(O_DIR)%.o : srcs/caster/%.c
 	@tput cuu1
 	@$(CC) $(FLAGS) $(INC) -c $< -o $@
 	echo "Compiling $(GREEN)$@"

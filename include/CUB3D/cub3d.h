@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/23 19:28:36 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 12:36:21 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,40 +211,68 @@ typedef struct s_line
 	float	y;
 }	t_line;
 
-int     _parser(char *file_path, t_config *config, t_gc *gc);
-int		parse_file(char *file_path, t_config *config);
-int		parse_texture(char *line, t_textures *textures);
-int		parse_color(char *line, t_colors *colors);
-int		parse_map(char *line, t_map *map);
+int     		_parser(char *file_path, t_config *config, t_gc *gc);
+int				parse_file(char *file_path, t_config *config);
+int				parse_texture(char *line, t_textures *textures);
+int				parse_color(char *line, t_colors *colors);
+int				parse_map(char *line, t_map *map);
 
-int		read_file(int fd, char **file_content, t_gc *gc);
-int		validate_map(t_map *map);
+int				read_file(int fd, char **file_content, t_gc *gc);
+int				validate_map(t_map *map);
 
-void    _perror(char *type, char *msg);
-int     check_extension(char *ext);
+void    		_perror(char *type, char *msg);
+int     		check_extension(char *ext);
 
-char    *to_str(char c, t_gc *gc);
-void    fill(int **order, t_config *conf);
-char    _next(char *map, int i);
-void	cleanupAndExit(char *error, char *details, t_game *game);
-int		get_colors(t_colors *colors, t_hex *hex);
-void	*_memory(size_t count, size_t size, t_gc *gc);
+char    		*to_str(char c, t_gc *gc);
+void    		fill(int **order, t_config *conf);
+char    		_next(char *map, int i);
+void			cleanupAndExit(char *error, char *details, t_game *game);
+int				get_colors(t_colors *colors, t_hex *hex);
+void			*_memory(size_t count, size_t size, t_gc *gc);
 
-int		 _init_all(t_gc **gc, t_config *config, t_game *game);
-int		start_check(t_game *game, t_config *config);
-char    *_process_line(char *content, t_config *config, t_gc *gc);
+int				 _init_all(t_gc **gc, t_config *config, t_game *game);
+int				start_check(t_game *game, t_config *config);
+char    		*_process_line(char *content, t_config *config, t_gc *gc);
 
-int 	check_one(t_config *conf, t_gc *gc);
-int 	check_two(t_config *conf, t_gc *gc);
-int		check_three(t_game *game);
-int		check_four(t_config *conf);
+int 			check_one(t_config *conf, t_gc *gc);
+int 			check_two(t_config *conf, t_gc *gc);
+int				check_three(t_game *game);
+int				check_four(t_config *conf);
 
-int		game_engine(t_game *game);
-int		grid_render(t_game *game);
-int		player_render(t_game *game);
-void    _fill(t_game *g, int y, int x, unsigned int color);
-void	draw_line(t_game *g, int x0, int y0, int x1, int y1);
-bool    is_has_wall(double x, double y, char **grid, t_game *g);
+int				game_engine(t_game *game);
+int				grid_render(t_game *game);
+int				player_render(t_game *game);
+void    		_fill(t_game *g, int y, int x, unsigned int color);
+void			draw_line(t_game *g, int x0, int y0, int x1, int y1);
+bool    		is_has_wall(double x, double y, char **grid, t_game *g);
+int				clear_image(t_game *g);
+
+int				_init_buffers(t_game_tex *g_tex, t_gc *gc);
+int				fill_buffer(size_t *buffer, uint8_t *pix);
+int				create_costum_texture_buffer(t_game_tex *g_tex, t_gc *gc);
+int				get_game_textures(t_game *g);
+
+void			start_draw_wall(t_game *g, t_var *inf);
+void			calculate_wall_end_start(t_var *inf);
+void			which_texture(t_game *g, t_ray *ray, t_var *inf);
+int				render3d_projection_walls(t_game *g);
+
+void			movePlayerSideways(t_player *p, t_map *map, t_game *game);
+int				key_press(void *param);
+void			rotate_by_mouse(double xpos, double ypos, void* param);
+
+float			distance_bet_points(float x1, float y1, float x2, float y2);
+void			calc_distance(t_all *all, t_player *p);
+float			normalize(float *angle);
+void			_initializer(t_all *all);
+int				init_ray(t_ray *ray, float angle);
+int				cast_all_rays(t_game *game);
+void			cast(int id, t_game *g);
+t_next_touch	ver_inter(t_coor *coor, t_player *p, t_ray *rays, int id);
+t_next_touch	horz_inter(t_coor *coor, t_player *p, t_ray *rays, int id);
+void			ver_ray_grid_inter(t_game *g, t_all *all, int id);
+void			horz_ray_grid_inter(t_game *g, t_all *all, int id);
+
 
 //
 int		cast_all_rays(t_game *game);

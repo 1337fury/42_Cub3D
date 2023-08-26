@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 19:30:24 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/23 20:45:37 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/26 12:17:56 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,28 @@ bool	is_has_wall(double x, double y, char **grid, t_game *g)
     if (grid[new_y][new_x] == '1')
         return (true);
     return (false);
+}
+
+int	clear_image(t_game *g)
+{
+	int		i;
+	int		j;
+
+	if (!g)
+		return (EXIT_FAILURE);
+	i = 0;
+	while (i < WIDTH)
+	{
+		j = 0;
+		while (j < HEIGHT)
+		{
+			if (j < HEIGHT / 2)
+				mlx_put_pixel(g->image, i, j, g->g_conf.hex_colors.ceil);
+			else
+				mlx_put_pixel(g->image, i, j, g->g_conf.hex_colors.floor);
+			j++;
+		}
+		i++;
+	}
+	return (EXIT_SUCCESS);
 }
