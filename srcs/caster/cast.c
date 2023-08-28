@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:20:02 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/27 16:56:15 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/28 10:49:58 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,12 @@ int	cast_all_rays(t_game *game)
 {
 	float	ray_angle;
 	int		i;
+	float	fov;
 
 	if (!game)
 		return (EXIT_FAILURE);
-	ray_angle = game->player.rot_angle - (FOV_ANGLE / 2);
+	fov = 60 * (M_PI / 180);
+	ray_angle = game->player.rot_angle - (fov / 2);
 	i = 0;
 	while (i < NUM_RAYS)
 	{
@@ -56,7 +58,7 @@ int	cast_all_rays(t_game *game)
 			return (EXIT_FAILURE);
 		game->rays[i].cast = cast;
 		game->rays[i].cast(i, game);
-		ray_angle += (FOV_ANGLE / NUM_RAYS);
+		ray_angle += (fov / NUM_RAYS);
 		i++;
 	}
 	return (EXIT_SUCCESS);

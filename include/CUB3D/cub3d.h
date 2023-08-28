@@ -6,24 +6,24 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/27 16:54:17 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/28 11:05:18 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#include <math.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <float.h>
-#include "MLX42.h"
-#include "libft.h"
-#include "ft_printf.h"
-#include "get_next_line.h"
-#include "gc_memory.h"
+# include <math.h>
+# include <fcntl.h>
+# include <stdio.h>
+# include <errno.h>
+# include <string.h>
+# include <limits.h>
+# include "MLX42.h"
+# include "libft.h"
+# include "ft_printf.h"
+# include "get_next_line.h"
+# include "gc_memory.h"
 
 # define NUM_TEXTURES 4
 # define TEXTURE_WIDTH 15
@@ -33,46 +33,43 @@
 # define HEIGHT 700
 # define TILE_SIZE 15
 
-# define FOV_ANGLE 			60 * (M_PI / 180)
-# define WALL_STRIP_WIDTH 	1
-# define NUM_RAYS 			WIDTH / WALL_STRIP_WIDTH
+# define NUM_RAYS 			WIDTH
 
-#define USAGE "./cub3D <PATH>/name.cub"
-#define MAP   "Invalid file extension"
-#define F_READ "Error reading or empty file"
+# define USAGE "./cub3D <PATH>/name.cub"
+# define MAP   "Invalid file extension"
+# define F_READ "Error reading or empty file"
 
 // Forward declaration of struct s_game s_player
-struct s_game;
-struct s_player;
+struct		s_game;
+struct		s_player;
 
-typedef int (*_update)(void *);
-typedef bool (*_has_wall)(double, double, char **, struct s_game*);
-typedef void (*_cast)(int, struct s_game*);
-typedef void (*_render)(struct s_game*, int);
+typedef int	(*t_update)(void *);
+typedef bool(*t_has_wall)(double, double, char **, struct s_game*);
+typedef void(*t_cast)(int, struct s_game*);
+typedef void(*t_render)(struct s_game*, int);
 
-typedef	struct s_point
+typedef struct s_point
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 }	t_point;
-
 
 typedef struct s_ray
 {
-	float	ray_angle;
-	float	wall_hit_x;
-	float	wall_hit_y;
-	float	distance;
-	bool	was_hit_vertical;
-	bool	is_ray_facing_down;
-	bool	is_ray_facing_up;
-	bool	is_ray_facing_right;
-	bool	is_ray_facing_left;
-	_cast	cast;
-	_render	render;
-} t_ray;
+	float		ray_angle;
+	float		wall_hit_x;
+	float		wall_hit_y;
+	float		distance;
+	bool		was_hit_vertical;
+	bool		is_ray_facing_down;
+	bool		is_ray_facing_up;
+	bool		is_ray_facing_right;
+	bool		is_ray_facing_left;
+	t_cast		cast;
+	t_render	render;
+}	t_ray;
 
-typedef struct	s_player
+typedef struct s_player
 {
 	double		x;
 	double		y;
@@ -84,52 +81,52 @@ typedef struct	s_player
 	double		rot_speed;
 	double		new_x;
 	double		new_y;
-	_update		update;
+	t_update	update;
 	char		side;
 }	t_player;
 
-typedef struct	s_dimension
+typedef struct s_dimension
 {
 	int	height;
 	int	width;
 }				t_dimension;
 
-typedef struct	s_map
+typedef struct s_map
 {
 	t_dimension	dim;
-    char    	*flat;
+	char		*flat;
 	char		**grid;
-    int     	order;
-	_has_wall	has_wall;
+	int			order;
+	t_has_wall	has_wall;
 }				t_map;
 
-typedef struct   s_info
+typedef struct s_info
 {
-    char    *value;
-    int     order;
-}   t_info;
+	char	*value;
+	int		order;
+}	t_info;
 
-typedef struct	s_textures
+typedef struct s_textures
 {
-	t_info  north;
-	t_info  south;
-	t_info  east;
-	t_info  west;
+	t_info	north;
+	t_info	south;
+	t_info	east;
+	t_info	west;
 }				t_textures;
 
-typedef struct	s_colors
+typedef struct s_colors
 {
-	t_info  floor;
-	t_info  ceiling;
-}				t_colors;
+	t_info	floor;
+	t_info	ceiling;
+}	t_colors;
 
 typedef struct s_hex
 {
-    unsigned int	ceil;
-    unsigned int	floor;
-} t_hex;
+	unsigned int	ceil;
+	unsigned int	floor;
+}	t_hex;
 
-typedef struct	s_config
+typedef struct s_config
 {
 	t_textures	textures;
 	t_colors	colors;
@@ -139,9 +136,9 @@ typedef struct	s_config
 
 typedef struct s_data
 {
-    int order;
-    int point;
-} t_data;
+	int	order;
+	int	point;
+}	t_data;
 
 typedef struct s_game_tex
 {
@@ -149,10 +146,10 @@ typedef struct s_game_tex
 	size_t			*s_buffer;
 	size_t			*w_buffer;
 	size_t			*e_buffer;
-    mlx_texture_t	*north;
-    mlx_texture_t	*south;
-    mlx_texture_t	*west;
-    mlx_texture_t	*east;
+	mlx_texture_t	*north;
+	mlx_texture_t	*south;
+	mlx_texture_t	*west;
+	mlx_texture_t	*east;
 }	t_game_tex;
 
 typedef struct s_game
@@ -169,9 +166,9 @@ typedef struct s_game
 typedef struct s_var
 {
 	int		i;
-    float	dis_proj_plane;
-    float	wall_strip_h;
-	float	correctWallDistance;
+	float	dis_proj_plane;
+	float	wall_strip_h;
+	float	correct_wall_distance;
 	int		wall_top_pixel;
 	int		wall_bottom_pixel;
 	int		tex_offset_x;
@@ -198,7 +195,7 @@ typedef struct s_hit_info
 	bool	found_wall_hit;
 	float	wall_hit_x;
 	float	wall_hit_y;
-} t_hit_info;
+}	t_hit_info;
 
 typedef struct s_all
 {
@@ -222,25 +219,25 @@ typedef struct s_line
 	float	y;
 }	t_line;
 
-int     		_parser(char *file_path, t_config *config, t_gc *gc);
+int				_parser(char *file_path, t_config *config, t_gc *gc);
 
 int				read_file(int fd, char **file_content, t_gc *gc);
 
-void    		_perror(char *type, char *msg);
-int     		check_extension(char *ext);
+void			_perror(char *type, char *msg);
+int				check_extension(char *ext);
 
-char    		*to_str(char c, t_gc *gc);
-void    		fill(int **order, t_config *conf);
-char    		_next(char *map, int i);
+char			*to_str(char c, t_gc *gc);
+void			fill(int **order, t_config *conf);
+char			_next(char *map, int i);
 void			cleanup_and_exit(char *error, char *details, t_game *game);
 void			*_memory(size_t count, size_t size, t_gc *gc);
 
-int				 _init_all(t_gc **gc, t_config *config, t_game *game);
+int				_init_all(t_gc **gc, t_config *config, t_game *game);
 int				start_check(t_game *game, t_config *config);
-char    		*_process_line(char *content, t_config *config, t_gc *gc);
+char			*_process_line(char *content, t_config *config, t_gc *gc);
 
-int 			check_one(t_config *conf, t_gc *gc);
-int 			check_two(t_config *conf, t_gc *gc);
+int				check_one(t_config *conf, t_gc *gc);
+int				check_two(t_config *conf, t_gc *gc);
 int				check_three(t_game *game);
 int				check_four(t_config *conf);
 int				is_surrounded(t_config *c);
@@ -248,9 +245,9 @@ int				is_surrounded(t_config *c);
 int				game_engine(t_game *game);
 int				grid_render(t_game *game);
 int				player_render(t_game *game);
-void    		_fill(t_game *g, int y, int x, unsigned int color);
+void			_fill(t_game *g, int y, int x, unsigned int color);
 void			draw_line(t_game *g, t_point *one, t_point *two);
-bool    		is_has_wall(double x, double y, char **grid, t_game *g);
+bool			is_has_wall(double x, double y, char **grid, t_game *g);
 int				clear_image(t_game *g);
 
 int				_init_buffers(t_game_tex *g_tex, t_gc *gc);
@@ -265,7 +262,7 @@ int				render3d_projection_walls(t_game *g);
 
 void			move_player_sideways(t_player *p, t_game *game);
 int				key_press(void *param);
-void			rotate_by_mouse(double xpos, double ypos, void* param);
+void			rotate_by_mouse(double xpos, double ypos, void *param);
 
 float			distance_bet_points(float x1, float y1, float x2, float y2);
 void			calc_distance(t_all *all, t_player *p);
@@ -292,6 +289,6 @@ void			*_memory(size_t count, size_t size, t_gc *gc);
 
 double			_get_angle(char side);
 
-void    		_game_loop(t_game *game);
+void			_game_loop(t_game *game);
 
 #endif

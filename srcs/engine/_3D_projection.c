@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:13:14 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/27 12:33:55 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/28 10:58:25 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,19 +70,21 @@ int	render3d_projection_walls(t_game *g)
 {
 	t_ray	*ray;
 	t_var	inf;
+	float	fov;
 
 	if (!g)
 		return (EXIT_FAILURE);
 	inf.i = 0;
+	fov = 60 * (M_PI / 180);
 	while (inf.i < NUM_RAYS)
 	{
 		ray = &g->rays[inf.i];
 		if (!ray)
 			return (EXIT_FAILURE);
-		inf.dis_proj_plane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
-		inf.correctWallDistance = ray->distance
+		inf.dis_proj_plane = (WIDTH / 2) / tan(fov / 2);
+		inf.correct_wall_distance = ray->distance
 			* cos(ray->ray_angle - g->player.rot_angle);
-		inf.wall_strip_h = (TILE_SIZE / inf.correctWallDistance)
+		inf.wall_strip_h = (TILE_SIZE / inf.correct_wall_distance)
 			* inf.dis_proj_plane;
 		calculate_wall_end_start(&inf);
 		which_texture(g, ray, &inf);
