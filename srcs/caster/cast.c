@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:20:02 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 13:42:43 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/27 16:56:15 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void	cast(int id, t_game *g)
 	rays = g->rays;
 	_initializer(&all);
 	all.ver = ver_inter(&all.coor, p, rays, id);
-	ver_ray_grid_inter(g, &all, id);
+	ver_ray_grid_inter(g, &all, id, &g->g_conf.map);
 	all.horz = horz_inter(&all.coor, p, rays, id);
-	horz_ray_grid_inter(g, &all, id);
+	horz_ray_grid_inter(g, &all, id, &g->g_conf.map);
 	calc_distance(&all, p);
 	if (all.horz_hit_distance < all.ver_hit_distance)
 	{
@@ -56,7 +56,7 @@ int	cast_all_rays(t_game *game)
 			return (EXIT_FAILURE);
 		game->rays[i].cast = cast;
 		game->rays[i].cast(i, game);
-		ray_angle += FOV_ANGLE / NUM_RAYS;
+		ray_angle += (FOV_ANGLE / NUM_RAYS);
 		i++;
 	}
 	return (EXIT_SUCCESS);
