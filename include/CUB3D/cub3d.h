@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:49:20 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 18:16:39 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/27 16:54:17 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,14 @@ typedef struct	s_player
 	double		y;
 	int			turn_dir;
 	int			walk_dir;
+	int			walk_side;
 	double		rot_angle;
 	double		move_speed;
 	double		rot_speed;
+	double		new_x;
+	double		new_y;
 	_update		update;
+	char		side;
 }	t_player;
 
 typedef struct	s_dimension
@@ -259,7 +263,7 @@ void			calculate_wall_end_start(t_var *inf);
 void			which_texture(t_game *g, t_ray *ray, t_var *inf);
 int				render3d_projection_walls(t_game *g);
 
-void			move_player_sideways(t_player *p, t_map *map, t_game *game);
+void			move_player_sideways(t_player *p, t_game *game);
 int				key_press(void *param);
 void			rotate_by_mouse(double xpos, double ypos, void* param);
 
@@ -272,8 +276,8 @@ int				cast_all_rays(t_game *game);
 void			cast(int id, t_game *g);
 t_next_touch	ver_inter(t_coor *coor, t_player *p, t_ray *rays, int id);
 t_next_touch	horz_inter(t_coor *coor, t_player *p, t_ray *rays, int id);
-void			ver_ray_grid_inter(t_game *g, t_all *all, int id);
-void			horz_ray_grid_inter(t_game *g, t_all *all, int id);
+void			ver_ray_grid_inter(t_game *g, t_all *all, int id, t_map *map);
+void			horz_ray_grid_inter(t_game *g, t_all *all, int id, t_map *map);
 
 int				get_colors(t_colors *colors, t_hex *hex);
 int				to_decimal(char **rgb, int *rgba);
@@ -285,6 +289,8 @@ char			*to_str(char c, t_gc *gc);
 void			fill(int **order, t_config *conf);
 void			cleanup_and_exit(char *error, char *details, t_game *g);
 void			*_memory(size_t count, size_t size, t_gc *gc);
+
+double			_get_angle(char side);
 
 void    		_game_loop(t_game *game);
 
