@@ -6,37 +6,26 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:01:38 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 13:24:07 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/27 16:22:53 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	move_player_sideways(t_player *p, t_map *map, t_game *game)
+void	move_player_sideways(t_player *p, t_game *game)
 {
-	double	new_x;
-	double	new_y;
-
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
 	{
-		new_x = p->x + cos(p->rot_angle + M_PI_2) * p->move_speed;
-		new_y = p->y + sin(p->rot_angle + M_PI_2) * p->move_speed;
-		if (!map->has_wall(new_x, new_y, map->grid, game))
-		{
-			p->x = new_x;
-			p->y = new_y;
-		}
+		p->walk_side = 1;
+		p->walk_dir = 1;
 	}
 	else if (mlx_is_key_down(game->mlx, MLX_KEY_D))
 	{
-		new_x = p->x + cos(p->rot_angle - M_PI_2) * p->move_speed;
-		new_y = p->y + sin(p->rot_angle - M_PI_2) * p->move_speed;
-		if (!map->has_wall(new_x, new_y, map->grid, game))
-		{
-			p->x = new_x;
-			p->y = new_y;
-		}
+		p->walk_side = -1;
+		p->walk_dir = 1;
 	}
+	else
+		p->walk_side = 0;
 }
 
 int	key_press(void *param)
@@ -60,7 +49,7 @@ int	key_press(void *param)
 		game->player.turn_dir = -1;
 	else
 		game->player.turn_dir = 0;
-	move_player_sideways(&game->player, &game->g_conf.map, game);
+	move_player_sideways(&game->player, game);
 	return (EXIT_SUCCESS);
 }
 
