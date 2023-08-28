@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 00:31:26 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 18:35:24 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/27 16:14:08 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	_init_player(t_player *player)
 	player->y = -1;
 	player->turn_dir = 0;
 	player->walk_dir = 0;
-	player->rot_angle = M_PI;
+	player->walk_side = 0;
+	player->rot_angle = 0.f;
 	player->move_speed = 1.5;
 	player->rot_speed = 1.5 * (M_PI / 180);
 	return (EXIT_SUCCESS);
