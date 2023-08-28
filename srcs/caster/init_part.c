@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:33:19 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 13:42:59 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/27 11:02:15 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	init_ray(t_ray *ray, float angle)
 	if (!ray)
 		return (_perror("ray", "Initialization failed"), 1);
 	ray->ray_angle = angle;
-	ray->wall_hit_x = 0;
-	ray->wall_hit_y = 0;
-	ray->distance = 0;
+	ray->wall_hit_x = 0.f;
+	ray->wall_hit_y = 0.f;
+	ray->distance = 0.f;
 	ray->was_hit_vertical = false;
 	ray->is_ray_facing_down = ray->ray_angle > 0 && ray->ray_angle < M_PI;
 	ray->is_ray_facing_up = !ray->is_ray_facing_down;
@@ -45,8 +45,8 @@ void	_initializer(t_all *all)
 	all->coor.yintercept = 0.f;
 	all->coor.xstep = 0.f;
 	all->coor.ystep = 0.f;
-	all->horz_hit_distance = 0;
-	all->ver_hit_distance = 0;
+	all->horz_hit_distance = 0.f;
+	all->ver_hit_distance = 0.f;
 }
 
 //fmod => float modulo
