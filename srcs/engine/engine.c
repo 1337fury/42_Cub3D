@@ -6,7 +6,7 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 11:10:39 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 13:56:14 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/27 15:52:15 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ void	game_spirit(void *data)
 	t_game	*game;
 
 	game = (t_game *)data;
-	if (key_press(game))
-		cleanup_and_exit("key press", "failed!", game);
 	if (clear_image(game))
 		cleanup_and_exit("clear image", "failed!", game);
+	if (key_press(game))
+		cleanup_and_exit("key press", "failed!", game);
 	if (player_render(game))
 		cleanup_and_exit("player render", "failed!", game);
 	if (cast_all_rays(game))
@@ -81,6 +81,7 @@ int	before_start(t_game *g)
 	if (tex->east.order == -1 || tex->north.order == -1
 		|| tex->south.order == -1 || tex->west.order == -1)
 		return (_perror("Error", "Missing texture"), 1);
+	p->rot_angle = _get_angle(p->side);
 	return (EXIT_SUCCESS);
 }
 
