@@ -6,11 +6,22 @@
 /*   By: abdeel-o <abdeel-o@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 12:35:35 by abdeel-o          #+#    #+#             */
-/*   Updated: 2023/08/26 13:42:13 by abdeel-o         ###   ########.fr       */
+/*   Updated: 2023/08/27 12:00:35 by abdeel-o         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+double	_get_angle(char side)
+{
+	if (side == 'W')
+		return (M_PI);
+	if (side == 'S')
+		return (M_PI / 2);
+	if (side == 'N')
+		return (3 * M_PI / 2);
+	return (0);
+}
 
 float	distance_bet_points(float x1, float y1, float x2, float y2)
 {
